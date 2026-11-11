@@ -20,9 +20,13 @@ Taken from the client-approved concept at widgit.yoyoqa.site. The concept's navi
 
 - **Symbol arc hero** (`wf-symbol-arc`, hero variant): big statement heading, one CTA, labelled symbol tiles on three arcs that turn slightly on scroll. Replaces the homepage hero.
 - **Mission statement** (`wf-text` with `statement`): "We believe in empowering individuals", under the hero.
-- **Product tour** (`wf-product-tour`): tabs for Widgit Online, InPrint 4 and Widgit Health, a screenshot with numbered feature hotspots, and three feature cards per product. On the homepage, plus single-product versions on the Widgit Online and InPrint 4 pages.
+- **Product tour** (`wf-product-tour`): tabs for Widgit Online and InPrint 4, a screenshot with numbered feature hotspots, and three feature cards per product. On the homepage, plus single-product versions on the Widgit Online and InPrint 4 pages.
 - **Closing symbol band** (`wf-symbol-arc`, band variant) near the end of the homepage.
 - **Reduce motion switch** in the footer. It follows the device's reduced-motion setting until the visitor chooses, remembers the choice in that browser, and switches off every animation and transition site-wide, including the symbol arcs.
+
+## Copy from the live site (11 Nov 2026)
+
+Prices, figures, partner details, testimonials, success stories, training, licensing and services copy are now taken from the current widgit.com. Anything still in square brackets wasn't on the live site.
 
 ## Pages
 
@@ -70,18 +74,25 @@ Taken from the client-approved concept at widgit.yoyoqa.site. The concept's navi
 
 ## Open questions for Widgit
 
-- All statistics and prices are placeholders in square brackets. Real figures needed.
-- Partner names for Sweden, Norway, Finland and Italy, and whether country pages link to partner sites or stay on widgit.com.
+- Country pages now link out to partner websites. Confirm that is the intended behaviour.
 - Widgit Online sign-up URL, and whether plan or region is passed through.
 - Whether Shop and Widgit Online will share one login.
 - Resources filters: subscription tier and format are shown as text for now; only topic is an interactive filter. Confirm the full filter set.
 - Should the Middle East and Southeast Asia get their own landing pages, or stay on International schools?
-- Testimonials are placeholders and need real, approved quotes.
+- Testimonials now use quotes from the live site. Check they are still approved for use, and add one for School trusts.
 
-- Widgit Health appears in the concept's product tour but not in the sitemap. Is it a real or planned product, and does it need its own page?
-- The concept describes clinical symbol sets as "NHS-approved". Confirm that claim before it goes into copy.
 - The symbol count ("15,000+" in the concept) is shown in square brackets until Widgit confirms it.
 - The symbol-arc motion needs a design decision: how far it turns, and whether it moves at all on phones.
+
+- The live site disagrees with itself in places. Confirm which is right: free trial length (21 days on UK pages, 30 days on the international page), word count (55,000+ English words vs 60,000+ words and phrases), languages (80 vs 83+), and the support phone number (01926 333680 on most pages, 01926 333686 in the Support menu).
+- The concept's product tour mentions Widgit Prompt and an Inspiration Bank. Neither appears on the live site. Are these new features?
+- Symwriter is in the sitemap, but the live UK site only sells Widgit Online and InPrint 4. Symwriter appears only in support and through international partners. Does it still need a product page?
+- Point is sold by website size, but the live page doesn't show prices.
+- BeClear isn't on the live site. Copy needed.
+- The live site has About Widgit pages (mission, B Corp, history, jobs, blog) that aren't in the sitemap.
+- Resource categories on the Resources page come from the live site, but which category each example belongs to is illustrative.
+- Only three success stories have detail pages. The other cards on Symbols in Action reuse them.
+- The live site lists 21 countries under International. The region switcher only covers six partner countries plus international schools.
 
 ## Kit changes made in this build
 
@@ -95,6 +106,10 @@ Taken from the client-approved concept at widgit.yoyoqa.site. The concept's navi
 ## Change log
 
 ### 2026-11-11
+- Changed: Filled in copy, prices and figures from the current widgit.com.
+- Changed: All six country pages now name the local partner and contact details.
+- Changed: Case studies now use real Widgit success stories.
+- Changed: Placeholder testimonials replaced with real quotes from widgit.com.
 - Added: Homepage hero now shows the symbol arc from the approved concept.
 - Added: Mission statement band below the homepage hero.
 - Added: Interactive product tour on the homepage, with numbered feature hotspots.

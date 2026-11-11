@@ -77,7 +77,7 @@ export class WfProductTour extends Light {
 
         ${multi ? html`
           <div role="tablist" aria-label="Products" @keydown=${this.onTabKey}
-               class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-2 rounded-2xl bg-gray-100 p-2">
+               class="mt-8 grid grid-cols-1 ${this.tabs.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'} gap-2 rounded-2xl bg-gray-100 p-2">
             ${this.tabs.map((t, i) => html`
               <button type="button" role="tab" id="${this.uid}-tab-${i}"
                 aria-selected=${i === this.active} aria-controls="${this.uid}-panel" tabindex=${i === this.active ? 0 : -1}

@@ -5,7 +5,7 @@
 
 export const siteName = 'Widgit'
 export const footerTagline = 'Widgit Symbols help people of all ages and abilities understand, communicate and take part. Used in schools, health services and public spaces.'
-export const footerLegal = 'Widgit Software. Company details to be confirmed.'
+export const footerLegal = 'Widgit Software Ltd. Registered in England and Wales, no. 07739412. VAT no. GB 118 9493 79.'
 
 export interface Block {
   component: string
@@ -64,7 +64,7 @@ export const primaryNav: NavItem[] = [
       { label: 'InPrint 4', href: 'inprint-4.html', description: 'Design professional printed symbol materials.' },
       { label: 'Symwriter', href: 'symwriter.html', description: 'Write with symbols as you type.' },
       { label: 'Digital Accessibility', href: 'digital-accessibility.html', description: 'Point and BeClear for accessible digital content.' },
-      { label: 'Widgit Apps', href: 'widgit-apps.html', description: 'Widgit Writer, Widgit Go, Symbol2Write and Widgit Vocab.' },
+      { label: 'Widgit Apps', href: 'widgit-apps.html', description: 'Widgit Writer, Widgit Go, Symbols2Write and Widgit Vocab.' },
       { label: 'Partner Products', href: 'partner-products.html', description: 'Trusted tools that work alongside Widgit Symbols.' },
       { label: 'Plans and pricing', href: 'plans-pricing.html', description: 'Subscriptions for individuals, schools and trusts.' },
       { label: 'Pricing for international schools', href: 'plans-pricing-international.html', description: 'Plans for schools outside the UK.' },
@@ -119,8 +119,8 @@ export const regions: { label: string; href: string; description: string }[] = [
   { label: 'Norway', href: 'norway.html', description: 'Through our Norwegian partner' },
   { label: 'Finland', href: 'finland.html', description: 'Through our Finnish partner' },
   { label: 'Italy', href: 'italy.html', description: 'Through our Italian partner' },
-  { label: 'Canada', href: 'canada.html', description: 'Schools and organisations in Canada' },
-  { label: 'Australia', href: 'australia.html', description: 'Schools and organisations in Australia' },
+  { label: 'Canada', href: 'canada.html', description: 'Through our Canadian partner' },
+  { label: 'Australia', href: 'australia.html', description: 'Through our Australian partner' },
   { label: 'International schools', href: 'international-schools.html', description: 'Middle East, Southeast Asia and beyond' },
 ]
 
@@ -198,11 +198,24 @@ const contactLink = (route: 'general' | 'quote' | 'licensing' | 'symbolfriendly'
   `contact.html?${route}${extra ? '&' + extra : ''}#contact-form`
 
 const quote = (q: string, role: string) => ({ quote: q, attribution: 'Placeholder quote', role })
+/** A real testimonial, taken from the current widgit.com. */
+const rq = (q: string, attribution: string, role?: string) => ({ quote: q, attribution, role })
+const Q = {
+  headteacher: rq('Without having access to the symbols and the programs we would not be able to function as a school. These children would not be able to go through the day as they do independently.', 'A headteacher'),
+  parent: rq('Your symbols have been life savers for my severely autistic son. The quality of life for our family is so much better.', 'Parent of a child on the autism spectrum'),
+  responder: rq('Being able to reassure someone in an emergency is key to my role. Widgit Medical Communication Aids make me more confident that I can bring calm in the widest range of situations.', 'A Community First Responder'),
+  commissioner: rq('By using Widgit symbols, people who have speech and language difficulties or are non-verbal were able to access and understand what participation means to them.', 'Sarah-Louise Davies', 'Children and Young People\'s Commissioner, Scotland'),
+  theatre: rq('We are delighted with the symbol resources. They are professional, engaging and attractive to our customers.', 'Zoë Briggs', 'Ambassador Theatre Group'),
+  tfl: rq('The people who have used it have found it an easy document to follow and it clearly shows what is expected of them, and of us.', 'Charlotte Eade', 'HR Project Manager, Transport for London'),
+  signage: rq('The aim of including symbols on the directional signage was to provide simple, identifiable objects that all members of the community would be able to recognise.', 'Mark Owers', 'Chelmsford Borough Council'),
+  point: rq('Widgit\'s Point tool meets the requirement for making websites more accessible to people with cognitive difficulties.', 'Joe Chidzik', 'AbilityNet'),
+}
 
 // --- Sector page template (Who we help children) ---
 function sectorPage(o: {
   slug: string; name: string; intro: string; challenge: string[]; how: { heading: string; description: string; href: string }[]
   caseHref: string; caseTitle: string; ctaLabel: string; ctaHref: string; ctaId: string; parent?: Crumb
+  quote?: { quote: string; attribution: string; role?: string }
 }): Page {
   return {
     hero: { component: 'wf-standard-hero', props: {
@@ -213,7 +226,7 @@ function sectorPage(o: {
     blocks: [
       { component: 'wf-text-media', props: { heading: 'Why symbols matter here', body: o.challenge, side: 'left', mediaLabel: `Symbols in use: ${o.name}` } },
       { component: 'wf-cards', props: { heading: 'How Widgit can help', cols: 3, items: o.how.map((h) => ({ ...h, linkText: 'Find out more', imageLabel: h.heading })) } },
-      { component: 'wf-quote', props: { items: [quote('Symbols have changed how we share information. People ask fewer questions because they understand the first time.', `${o.name} customer`)] } },
+      { component: 'wf-quote', props: { items: [o.quote || quote('Symbols have changed how we share information. People ask fewer questions because they understand the first time.', `${o.name} customer`)] } },
       { component: 'wf-cards', props: { heading: 'See it in action', cols: 1, items: [{ href: o.caseHref, heading: o.caseTitle, description: 'Read how one organisation put symbols to work.', linkText: 'Read the case study', imageLabel: 'Case study image', category: 'Case study' }] } },
       contactPromo(`cta-${o.slug}-promo`, `Talk to us about ${o.name.toLowerCase()}`, 'Tell us what you need and the right person at Widgit will get back to you.', contactLink('general')),
     ],
@@ -251,30 +264,27 @@ function productPage(o: {
 }
 
 // --- Country landing page template ---
-function countryPage(o: { slug: string; country: string; partner: boolean; language: string; note: string }): Page {
+function countryPage(o: {
+  slug: string; country: string; partner: string; address: string; email: string; phone: string; web: string
+  language: string; products: string[]
+}): Page {
+  const site = `https://${o.web}`
   return {
     hero: { component: 'wf-standard-hero', props: {
-      eyebrow: `Widgit in ${o.country}`, heading: o.partner ? `Widgit Symbols in ${o.country}, through our local partner` : `Widgit Symbols for ${o.country}`,
-      body: o.note, ctaLabel: o.partner ? `Contact our ${o.country} partner` : 'Talk to our international team',
-      ctaHref: contactLink('general', `country=${o.country}`), ctaId: `cta-${o.slug}-hero`, mediaLabel: `${o.country} landing image`,
+      eyebrow: `Widgit in ${o.country}`, heading: `Widgit Symbols in ${o.country}, through ${o.partner}`,
+      body: `Schools and organisations in ${o.country} buy Widgit products through our local partner, ${o.partner}, who also provide support in ${o.language}.`,
+      ctaLabel: `Visit ${o.partner}`, ctaHref: site, ctaId: `cta-${o.slug}-hero`, mediaLabel: `${o.country} landing image`,
       breadcrumb: bc({ label: o.country, href: `${o.slug}.html` }),
     } },
     blocks: [
       { component: 'wf-text-media', props: {
-        heading: o.partner ? 'Buy and get support locally' : 'Support across time zones',
-        body: o.partner
-          ? [`In ${o.country}, Widgit products are sold and supported by our partner [Partner name]. They offer training, invoicing and support in ${o.language}.`, 'Your licence works with the same Widgit Online account and symbol set used worldwide.']
-          : [`Schools and organisations in ${o.country} buy directly from Widgit. Our international team can help with pricing, training and setup.`, 'Symbol vocabularies are available in English, with more languages on request.'],
-        side: 'left', mediaLabel: o.partner ? 'Partner logo and team' : 'International team',
-        ctaLabel: o.partner ? 'Get partner contact details' : 'See international pricing',
-        ctaHref: o.partner ? contactLink('general', `country=${o.country}`) : 'plans-pricing-international.html',
+        heading: 'Buy and get support locally',
+        body: [`${o.partner} can help with orders, free trials, software updates, manuals and installation guides.`,
+          `Products available through ${o.partner}: ${o.products.join(', ')}.`],
+        side: 'left', mediaLabel: `${o.partner} logo`, ctaLabel: `Contact ${o.partner}`, ctaHref: site,
       } },
-      { component: 'wf-cards', props: { heading: `Available in ${o.country}`, cols: 3, items: [
-        { href: 'widgit-online.html', heading: 'Widgit Online', description: `Create symbol resources in ${o.language}.`, imageLabel: 'Widgit Online', linkText: 'Explore Widgit Online' },
-        { href: 'inprint-4.html', heading: 'InPrint 4', description: 'Design printed materials with symbols.', imageLabel: 'InPrint 4', linkText: 'Explore InPrint 4' },
-        { href: 'resources.html', heading: 'Free resources', description: 'Ready-made symbol resources to download.', imageLabel: 'Resources', linkText: 'Browse resources' },
-      ] } },
-      contactPromo(`cta-${o.slug}-promo`, `Questions about Widgit in ${o.country}?`, 'Send us a message and we will route it to the right local contact.', contactLink('general', `country=${o.country}`)),
+      { component: 'wf-text', props: { heading: `Contact ${o.partner}`, body: [o.address, `Email: ${o.email}`, `Phone: ${o.phone}`, `Website: ${o.web}`] } },
+      contactPromo(`cta-${o.slug}-promo`, `Questions about Widgit in ${o.country}?`, 'Send us a message and we will put you in touch with the right local contact.', contactLink('general', `country=${o.country}`)),
     ],
   }
 }
@@ -348,30 +358,18 @@ export const pages: Record<string, Page> = {
               { x: 85, y: 20, title: 'Templates', body: 'Start from worksheets, schedules or communication boards.' },
             ],
             features: [
-              { heading: '[15,000+] Widgit symbols', description: 'Drag and drop symbols, filtered by category or keyword.' },
+              { heading: '100,000+ Widgit symbols', description: 'The complete Widgit Symbol Library, with symbols as you type.' },
               { heading: 'Symbols follow your text', description: 'Ideal for printed resources and visual schedules.' },
-              { heading: 'Hundreds of smart templates', description: 'Worksheets, schedules and boards with symbols built in.' },
+              { heading: '400+ templates', description: 'From forms and questionnaires to emotional support.' },
             ],
             ctaLabel: 'Explore InPrint 4', ctaHref: 'inprint-4.html', ctaId: 'cta-home-tour-inprint' },
-          { key: 'health', label: 'Widgit Health', screenshotLabel: 'Widgit Health screenshot (product to be confirmed)',
-            hotspots: [
-              { x: 20, y: 30, title: 'Clinical symbols', body: 'Symbol sets designed for patient communication.' },
-              { x: 60, y: 50, title: 'Patient profiles', body: 'Keep a communication profile for each patient so the whole care team uses the same symbols.' },
-              { x: 85, y: 75, title: 'Easy Read', body: 'Create easy-read versions of clinical documents.' },
-            ],
-            features: [
-              { heading: 'Clinical symbol sets', description: 'For patient communication in health and care settings. Approvals to be confirmed.' },
-              { heading: 'Personalised communication', description: 'Consistent, familiar symbols for every patient.' },
-              { heading: 'One-click Easy Read', description: 'Easy-read versions of clinical documents.' },
-            ],
-            ctaLabel: 'Symbols in health and care', ctaHref: 'health-social-care.html', ctaId: 'cta-home-tour-health' },
         ],
       } },
-      { component: 'wf-statistics', props: { heading: 'Widgit at a glance (figures to be confirmed)', items: [
-        { value: '[00,000+]', label: 'Widgit Symbols' },
-        { value: '[0,000+]', label: 'Free and premium resources' },
-        { value: '[00+]', label: 'Countries using Widgit' },
-        { value: '[00,000+]', label: 'Schools and organisations' },
+      { component: 'wf-statistics', props: { heading: 'Widgit at a glance', items: [
+        { value: '100,000+', label: 'Widgit Symbols' },
+        { value: '10,000+', label: 'Schools using Widgit Symbols' },
+        { value: '80+', label: 'Languages for dual-language resources' },
+        { value: '40+', label: 'Years of Widgit Symbols' },
       ] } },
       { component: 'wf-promo', props: {
         heading: 'Widgit Symbols: a visual language for everyone',
@@ -379,9 +377,9 @@ export const pages: Record<string, Page> = {
         side: 'right', ctaLabel: 'Explore Widgit Symbols', ctaHref: 'widgit-symbols.html', ctaId: 'cta-home-symbols', mediaLabel: 'Symbol grid',
       } },
       { component: 'wf-quote', props: { items: [
-        quote('Every child in my class can now follow the day. The visual timetable took me ten minutes to make.', 'Year 2 teacher, primary school'),
-        quote('Rolling Widgit out across our trust gave every school the same language for inclusion.', 'Head of Inclusion, multi-academy trust'),
-        quote('My daughter uses symbols to tell me how she feels. It has changed our evenings.', 'Parent'),
+        Q.headteacher,
+        Q.parent,
+        Q.responder,
       ] } },
       { component: 'wf-cards', props: { heading: 'Already using Widgit?', cols: 4, items: [
         { href: 'support.html', id: 'card-home-support', heading: 'Get support', description: 'Fix a problem or find a guide.', linkText: 'Visit Support' },
@@ -437,11 +435,11 @@ export const pages: Record<string, Page> = {
       ] } },
       { component: 'wf-text-media', props: {
         heading: 'More than a specialist tool',
-        body: ['Symbols help the whole school: visual timetables in every classroom, clearer signage in corridors and accessible letters home to parents.', 'Teachers like Isobel use them to support a mixed class. SENCOs use them to build consistent practice across staff.'],
+        body: ['Symbols help the whole school: visual timetables in every classroom, clearer signage in corridors and accessible letters home to parents.', 'Teachers use them to support a mixed class, and SENCOs use them to build consistent practice across staff.'],
         side: 'left', mediaLabel: 'Symbol signage in a school corridor',
       } },
-      { component: 'wf-statistics', props: { heading: 'Impact in schools (figures to be confirmed)', items: [
-        { value: '[00%]', label: 'of UK special schools use Widgit' }, { value: '[0,000+]', label: 'Mainstream primary schools' }, { value: '[00]', label: 'Minutes to make a first resource' },
+      { component: 'wf-statistics', props: { heading: 'Widgit in schools', items: [
+        { value: '10,000+', label: 'Schools using Widgit Symbols' }, { value: '100,000+', label: 'Symbols in the Widgit library' }, { value: '21 days', label: 'Free trial of Widgit Online' },
       ] } },
       { component: 'wf-cards', props: { heading: 'Get started', cols: 3, items: [
         { href: 'resources.html', heading: 'Free classroom resources', description: 'Timetables, social stories and topic packs.', imageLabel: 'Resource pack', linkText: 'Browse resources' },
@@ -455,13 +453,13 @@ export const pages: Record<string, Page> = {
   'school-trusts': sectorPage({
     slug: 'school-trusts', name: 'School trusts and groups (MATs)', parent: eduCrumb,
     intro: 'Give every school in your trust the same symbol tools, with central billing, admin and training.',
-    challenge: ['Inclusion leads like Jane need consistent practice across many schools, without negotiating separate licences for each one.', 'A trust-wide Widgit licence gives every school the same tools and lets staff share resources between sites.'],
+    challenge: ['Inclusion leads need consistent practice across many schools, without managing separate licences for each one.', 'A Widgit Enterprise plan is built around your trust, so every school has the same tools and staff can share resources between sites.'],
     how: [
-      { heading: 'Trust-wide licensing', description: 'One agreement covering every school, priced by number of sites.', href: 'plans-pricing.html' },
+      { heading: 'Enterprise plans', description: 'One plan for every school in your trust, tailored to your needs.', href: 'plans-pricing.html' },
       { heading: 'Central training', description: 'Train leads once and roll out across the trust.', href: 'training.html' },
       { heading: 'Shared resources', description: 'Build a resource library every school can use.', href: 'widgit-online.html' },
     ],
-    caseHref: 'case-study-trust.html', caseTitle: 'How a 14-school trust standardised visual support',
+    caseHref: 'case-study-trust.html', caseTitle: 'A whole-school approach at Ark Boulton Academy',
     ctaLabel: 'Request a trust quote', ctaHref: contactLink('quote', 'orgType=School trust / MAT'), ctaId: 'cta-trusts-quote',
   }),
 
@@ -483,7 +481,7 @@ export const pages: Record<string, Page> = {
         { href: 'inprint-4.html', heading: 'InPrint 4', description: 'Design signage and printed materials.', imageLabel: 'InPrint 4', linkText: 'Explore InPrint 4' },
         { href: 'symwriter.html', heading: 'Symwriter', description: 'Symbol-supported writing for pupils.', imageLabel: 'Symwriter', linkText: 'Explore Symwriter' },
       ] } },
-      { component: 'wf-quote', props: { items: [quote('We started with one class and within a term every teacher was using it.', 'SENCO, primary school')] } },
+      { component: 'wf-quote', props: { items: [Q.headteacher] } },
       trialPromo('cta-single-site-promo'),
     ],
   },
@@ -498,12 +496,12 @@ export const pages: Record<string, Page> = {
     blocks: [
       { component: 'wf-text-media', props: {
         heading: 'One visual language for a multilingual school',
-        body: ['When pupils speak many home languages, symbols give everyone a shared way to understand routines, instructions and topic vocabulary.', 'Widgit Online works anywhere with an internet connection, with licences priced in your currency.'],
+        body: ['When pupils speak many home languages, symbols give everyone a shared way to understand routines, instructions and topic vocabulary.', 'Widgit Online includes over 100,000 symbols covering more than 60,000 words and phrases, with translations in 83+ languages for dual-language resources. GEMS Winchester School in Dubai uses it to support English and Arabic speakers.'],
         side: 'left', mediaLabel: 'Multilingual classroom',
       } },
       { component: 'wf-links', props: { heading: 'Looking for a specific country?', cols: 3, items: [
-        { href: 'canada.html', label: 'Canada', description: 'Schools and organisations in Canada' },
-        { href: 'australia.html', label: 'Australia', description: 'Schools and organisations in Australia' },
+        { href: 'canada.html', label: 'Canada', description: 'Through our partner, Bridges' },
+        { href: 'australia.html', label: 'Australia', description: 'Through our partner, Spectronics' },
         { href: 'sweden.html', label: 'Nordic countries and Italy', description: 'Buy through our local partners' },
       ] } },
       contactPromo('cta-intl-promo', 'Plan a rollout across your school', 'Our international team can help with pricing, training and time zones.', contactLink('quote', 'orgType=International school')),
@@ -513,65 +511,65 @@ export const pages: Record<string, Page> = {
   'health-social-care': sectorPage({
     slug: 'health-social-care', name: 'Health and Social Care',
     intro: 'Help patients, residents and service users understand appointments, treatments and their own care.',
-    challenge: ['Health information is often complex and written for people who read easily. Symbols make leaflets, consent forms and care plans easier to follow.', 'Clearer information means fewer missed appointments and more confident conversations.'],
+    challenge: ['Being able to communicate with someone quickly and clearly is vital. Clear communication improves diagnosis and treatment, leading to quicker and more successful recovery.', 'Giving clear information and gathering accurate facts helps keep situations calm and reduces risks. Widgit Symbols add visual support to information, making it easier to understand.'],
     how: [
       { heading: 'Accessible patient leaflets', description: 'Symbol-supported information made with InPrint 4.', href: 'inprint-4.html' },
       { heading: 'Hospital signage', description: 'Wayfinding and ward signs designed for you.', href: 'symbol-services.html' },
       { heading: 'Become Symbol-Friendly', description: 'Show patients you are committed to clear communication.', href: 'symbol-friendly.html' },
     ],
-    caseHref: 'case-study-nhs.html', caseTitle: 'Clearer appointments at an NHS trust',
+    caseHref: 'symbols-in-action.html', caseTitle: 'Symbols in Action: health and care stories', quote: Q.responder,
     ctaLabel: 'Talk to our health team', ctaHref: contactLink('general', 'orgType=Health or social care'), ctaId: 'cta-health-hero',
   }),
 
   'government-local-authorities': sectorPage({
     slug: 'government-local-authorities', name: 'Government and Local Authorities',
     intro: 'Make public information, consultations and services accessible to every resident.',
-    challenge: ['Councils and public bodies have a duty to communicate clearly with everyone, including people with learning disabilities and limited English.', 'Symbol-supported versions of key documents help more people understand and respond.'],
+    challenge: ['Communicating well with everyone is vital to a sense of belonging in a community. Every local authority service needs to be accessible, regardless of language or literacy barriers.', 'From local offer websites and signage in public buildings to advice leaflets and surveys, Widgit works with local organisations to translate information into symbols and easy read text.'],
     how: [
       { heading: 'Easy-read documents', description: 'Create symbol-supported versions of public information.', href: 'inprint-4.html' },
-      { heading: 'Authority-wide licences', description: 'Licences covering schools and services in your area.', href: 'plans-pricing.html' },
+      { heading: 'Authority-wide licences', description: 'License symbols for not-for-profit use across your area, from schools to GP surgeries.', href: 'symbol-licensing.html' },
       { heading: 'Accessible digital content', description: 'Add symbols to your website with Point and BeClear.', href: 'digital-accessibility.html' },
     ],
-    caseHref: 'symbols-in-action.html', caseTitle: 'Symbols in Action: public sector stories',
+    caseHref: 'symbols-in-action.html', caseTitle: 'Symbols in Action: public sector stories', quote: Q.commissioner,
     ctaLabel: 'Talk to our team', ctaHref: contactLink('general', 'orgType=Local authority'), ctaId: 'cta-gov-hero',
   }),
 
   'public-services': sectorPage({
     slug: 'public-services', name: 'Public Services',
     intro: 'Libraries, transport, police and emergency services that everyone can understand and use.',
-    challenge: ['Public spaces can be confusing and stressful. Clear symbol signage helps people find their way and know what to expect.', 'Frontline staff can use symbol cards to communicate in difficult moments.'],
+    challenge: ['Signs, posters and leaflets in public places need to be accessible to everyone, regardless of language or literacy barriers.', 'For people who find text difficult, symbols can be their main way of accessing information. For confident readers, they give a quick reference to the key points.'],
     how: [
       { heading: 'Symbol signage', description: 'Designed, produced and installed for you.', href: 'symbol-services.html' },
       { heading: 'Communication cards', description: 'Printable cards for frontline staff.', href: 'resources.html' },
       { heading: 'Become Symbol-Friendly', description: 'Show your commitment to accessible services.', href: 'symbol-friendly.html' },
     ],
-    caseHref: 'symbols-in-action.html', caseTitle: 'Symbols in Action: public services',
+    caseHref: 'case-study-nhs.html', caseTitle: 'How the States of Jersey Police use symbols in custody', quote: Q.tfl,
     ctaLabel: 'Talk to our team', ctaHref: contactLink('general'), ctaId: 'cta-public-hero',
   }),
 
   'leisure-tourism': sectorPage({
     slug: 'leisure-tourism', name: 'Leisure and Tourism',
     intro: 'Help every visitor plan, enjoy and feel welcome at your museum, attraction or venue.',
-    challenge: ['Visitors with autism, learning disabilities or limited English often need to know what to expect before they arrive.', 'Symbol-supported visit guides, maps and signage make days out easier for everyone.'],
+    challenge: ['Attractions welcome a wide range of visitors, including tourists from abroad, school groups and people who find text hard to access.', 'Symbols that capture the main idea of an exhibit get information across quickly, and symbol-supported signage helps visitors find their way around.'],
     how: [
       { heading: 'Visit guides and maps', description: 'Symbol-supported guides your visitors can download.', href: 'symbol-services.html' },
       { heading: 'On-site signage', description: 'Clear wayfinding through your venue.', href: 'symbol-services.html' },
       { heading: 'Become Symbol-Friendly', description: 'Promote your venue as accessible.', href: 'symbol-friendly.html' },
     ],
-    caseHref: 'case-study-museum.html', caseTitle: 'A museum visit everyone can plan',
+    caseHref: 'case-study-museum.html', caseTitle: 'Woburn: the UK\'s first symbol-friendly safari park', quote: Q.theatre,
     ctaLabel: 'Talk to our team', ctaHref: contactLink('general'), ctaId: 'cta-leisure-hero',
   }),
 
   'parents-carers': sectorPage({
     slug: 'parents-carers', name: 'Parents, Carers and Individuals',
     intro: 'Make routines, appointments and big changes easier to understand at home.',
-    challenge: ['Parents like Jerome often hear about symbols from school or a speech and language therapist, but do not know where to start.', 'Free resources and simple tools let you use the same symbols at home that your child sees at school.'],
+    challenge: ['Symbols are a helpful bridge from the pictures and objects children already know to the printed word. They support vocabulary, understanding, communication and independence.', 'Free resources and simple tools let you use the same symbols at home that your child sees at school.'],
     how: [
       { heading: 'Free resources', description: 'Visual timetables and social stories to download.', href: 'resources.html' },
       { heading: 'Widgit Apps', description: 'Symbols on your phone or tablet.', href: 'widgit-apps.html' },
       { heading: 'Widgit Online for families', description: 'Make your own resources at home.', href: 'widgit-online.html' },
     ],
-    caseHref: 'symbols-in-action.html', caseTitle: 'Symbols in Action: families',
+    caseHref: 'symbols-in-action.html', caseTitle: 'Symbols in Action: families', quote: Q.parent,
     ctaLabel: 'Browse free resources', ctaHref: 'resources.html', ctaId: 'cta-parents-resources',
   }),
 
@@ -590,7 +588,7 @@ export const pages: Record<string, Page> = {
       ] } },
       { component: 'wf-cards', props: { heading: 'Digital and mobile', cols: 3, items: [
         { href: 'digital-accessibility.html', heading: 'Digital Accessibility', description: 'Point and BeClear for websites and documents.', imageLabel: 'Point on a website', linkText: 'Explore digital tools' },
-        { href: 'widgit-apps.html', heading: 'Widgit Apps', description: 'Widgit Writer, Widgit Go, Symbol2Write and Widgit Vocab.', imageLabel: 'Apps on a tablet', linkText: 'Explore the apps' },
+        { href: 'widgit-apps.html', heading: 'Widgit Apps', description: 'Widgit Writer, Widgit Go, Symbols2Write and Widgit Vocab.', imageLabel: 'Apps on a tablet', linkText: 'Explore the apps' },
         { href: 'partner-products.html', heading: 'Partner Products', description: 'Communication aids and tools that use Widgit Symbols.', imageLabel: 'Partner products', linkText: 'See partner products' },
       ] } },
       { component: 'wf-links', props: { heading: 'Pricing', cols: 2, items: [
@@ -603,18 +601,18 @@ export const pages: Record<string, Page> = {
 
   'widgit-online': productPage({
     slug: 'widgit-online', name: 'Widgit Online', eyebrow: 'Products',
-    intro: 'Create symbol-supported resources in your browser. Nothing to install, and your work is saved to the cloud.',
-    what: ['Widgit Online is our browser-based tool for making symbol resources. Type text and symbols appear automatically, then adjust the layout and print or share.', 'It includes thousands of templates, from visual timetables to social stories.'],
+    intro: 'Template-driven symbol resources from your browser. Start from hundreds of editable templates, then share online or print for the classroom, home and community.',
+    what: ['Choose a template, start typing, and symbols appear automatically. You can change symbol colours, edit symbol text and upload your own images.', 'Widgit Online gives you over 100,000 symbols, hundreds of templates and 2 million child-friendly photos. Standard plans and above add Dual Language support in 80 languages.'],
     features: [
       { heading: 'Symbols as you type', description: 'Automatic symbol support with easy word and symbol swaps.' },
       { heading: 'Ready-made templates', description: 'Start from timetables, stories, worksheets and more.' },
       { heading: 'Share with colleagues', description: 'Shared folders for teams, schools and trusts.' },
     ],
-    who: ['Teachers, SENCOs and teaching assistants making daily classroom resources.', 'Speech and language therapists, carers and parents who need quick, clear materials.'],
+    who: ['SEN professionals, teachers and teaching assistants making classroom resources.', 'Health practitioners, parents and carers who need clear, personalised materials.'],
     faqs: [
-      { heading: 'Do I need to install anything?', body: 'No. Widgit Online runs in any modern browser on Windows, Mac and Chromebook.' },
-      { heading: 'Can I try it before I buy?', body: 'Yes. Start a free trial and create resources straight away.' },
-      { heading: 'Can my whole school share resources?', body: 'Yes. School and trust plans include shared folders and central user management.' },
+      { heading: 'Do I need to install anything?', body: 'No. Widgit Online runs in current versions of Chrome, Edge, Firefox and Safari (Mac). Editing on tablets and phones is not fully supported, but the free Widgit Writer app works on iPad.' },
+      { heading: 'Can I try it before I buy?', body: 'Yes. Start a free 21-day trial and create resources straight away.' },
+      { heading: 'Can my team share resources?', body: 'Yes. Plans from Basic upwards include team collaboration and resource sharing, from 4 users on Basic to 150 on Pro.' },
     ],
     primary: { label: 'Start free trial', href: 'free-trial.html' },
     tour: { screenshotLabel: 'Widgit Online dashboard screenshot', hotspots: [
@@ -627,17 +625,18 @@ export const pages: Record<string, Page> = {
 
   'inprint-4': productPage({
     slug: 'inprint-4', name: 'InPrint 4', eyebrow: 'Products',
-    intro: 'Design professional symbol-supported signage, books and printed materials.',
-    what: ['InPrint 4 gives you full control over layout for printed materials, from classroom signs to patient leaflets.', 'Position text, symbols and images freely, and work with layers and styles.'],
+    intro: 'A powerful symbol resource editor with full design and layout features, for fully bespoke symbol materials.',
+    what: ['InPrint 4 is desktop software for Windows, made for advanced practitioners and symbol experts who want full design control.', 'It includes over 100,000 symbols, 400+ templates and around 100 ready-made resource packs with more than 3,200 pages of symbol materials.'],
     features: [
-      { heading: 'Free-form layout', description: 'Place text, symbols and images anywhere on the page.' },
-      { heading: 'Templates for print', description: 'Signs, books, worksheets and communication boards.' },
-      { heading: 'Consistent styles', description: 'Apply your house style across documents.' },
+      { heading: '400+ templates', description: 'From forms and questionnaires to emotional support.' },
+      { heading: 'Shuffle skin tones', description: 'Vary skin tones automatically across a document.' },
+      { heading: 'Presentation Export', description: 'Turn documents into interactive slideshows. Standard tier and above.' },
     ],
-    who: ['Specialist teachers and SENCOs producing printed classroom materials.', 'Health and public sector teams producing accessible leaflets and signs.'],
+    who: ['SEN professionals and teachers creating bespoke classroom materials.', 'Health practitioners, parents and carers who need fully personalised resources.'],
     faqs: [
-      { heading: 'How is InPrint 4 different from Widgit Online?', body: 'Widgit Online is quick and template-led. InPrint 4 gives more design control for print.' },
-      { heading: 'Can I upgrade from InPrint 3?', body: 'Upgrade options to be confirmed with Widgit.' },
+      { heading: 'How is InPrint 4 different from Widgit Online?', body: 'Widgit Online is ideal for anyone starting out. InPrint 4 has advanced templates, formatting and layout features for experienced users.' },
+      { heading: 'Does InPrint 4 work on a Mac?', body: 'No. InPrint 4 is made for Windows. Widgit Online works in Safari on a Mac.' },
+      { heading: 'Can I install it on several computers?', body: 'Yes. Licences cover a set number of installations at one location, from 1 on Home to unlimited on Site. It can be installed across a network.' },
     ],
     primary: { label: 'Buy InPrint 4', href: 'shop.html' },
     tour: { screenshotLabel: 'InPrint 4 document editor screenshot', hotspots: [
@@ -667,16 +666,16 @@ export const pages: Record<string, Page> = {
   'digital-accessibility': productPage({
     slug: 'digital-accessibility', name: 'Digital Accessibility', eyebrow: 'Products',
     intro: 'Make websites and digital content easier to understand with Point and BeClear.',
-    what: ['Point adds symbol support to web content so visitors can see a symbol for a word.', 'BeClear helps organisations write clearer, more accessible content.'],
+    what: ['Point is a picture dictionary for your website. Visitors hover over a word to see Widgit Symbols that show its meaning, with no change to your layout or design.', 'BeClear helps organisations write clearer, more accessible content.'],
     features: [
-      { heading: 'Point', description: 'Symbol support for website visitors.' },
+      { heading: 'Point', description: 'Hover over a word to see its symbol. Try the demo or a free trial.' },
       { heading: 'BeClear', description: 'Clearer, accessible digital content.' },
-      { heading: 'Easy setup', description: 'Add to your site with support from our team.' },
+      { heading: 'Easy setup', description: 'Add the Point code to any page. Priced by website size.' },
     ],
     who: ['Councils, health organisations and venues with public-facing websites.'],
     faqs: [
       { heading: 'Does this replace an easy-read version?', body: 'It supports understanding, but some content still benefits from a dedicated easy-read version.' },
-      { heading: 'How does setup work?', body: 'Our team works with your web team to add it. Details to be confirmed.' },
+      { heading: 'How does setup work?', body: 'Add the Point code to each page you want to support. Widgit\'s helpdesk can help you get it running.' },
     ],
     primary: { label: 'Talk to us about Point and BeClear', href: contactLink('general') },
   }),
@@ -686,14 +685,14 @@ export const pages: Record<string, Page> = {
     intro: 'Widgit Symbols on phones and tablets, for communication and learning on the go.',
     what: ['Our apps bring symbols wherever people need them, from writing support to vocabulary and everyday communication.'],
     features: [
-      { heading: 'Widgit Writer', description: 'Symbol-supported writing on a tablet.' },
-      { heading: 'Widgit Go', description: 'Communication and learning activities on the go.' },
-      { heading: 'Symbol2Write', description: 'Build sentences from symbols.' },
-      { heading: 'Widgit Vocab', description: 'Build and practise topic vocabulary with symbols.' },
+      { heading: 'Widgit Writer', description: 'Create symbol documents on your iPad. Free with a Widgit Online account.' },
+      { heading: 'Widgit Go', description: 'Simple AAC and language development, at home, in class or on the go.' },
+      { heading: 'Symbols2Write', description: 'Apps for young learners to learn how sentences are built.' },
+      { heading: 'Widgit Vocab', description: 'Symbol activities and grids for your iPad.' },
     ],
     who: ['Individuals, families and schools using tablets for communication and learning.'],
     faqs: [
-      { heading: 'Which devices are supported?', body: 'Device support for each app to be confirmed with Widgit.' },
+      { heading: 'Which devices are supported?', body: 'Widgit Writer and Widgit Vocab are for iPad. Device support for the other apps is to be confirmed.' },
       { heading: 'Where do I download the apps?', body: 'From the relevant app store. Links to be added.' },
     ],
     primary: { label: 'Compare the apps', href: '#features' },
@@ -728,25 +727,27 @@ export const pages: Record<string, Page> = {
   'plans-pricing': {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Plans and pricing', heading: 'Plans for every setting',
-      body: 'Start with a free trial, then choose a plan for yourself, your school or your whole trust. Prices exclude VAT.',
+      body: 'Try Widgit Online free for 21 days, then choose a plan for your home, school or organisation. Pay monthly, yearly or for three years.',
       ctaLabel: 'Start a free trial', ctaHref: 'free-trial.html', ctaId: 'cta-pricing-trial', secondaryLabel: 'Request a quote', secondaryHref: contactLink('quote'),
       mediaLabel: 'Pricing illustration', breadcrumb: bc(prodCrumb, { label: 'Plans and pricing', href: 'plans-pricing.html' }),
     } },
     blocks: [
-      { component: 'wf-cards', props: { heading: 'Widgit Online plans', cols: 3, items: [
-        { href: 'free-trial.html', heading: 'Individual: £[00] / year', description: 'One user. All symbols and templates. Ideal for parents, therapists and individual teachers.', linkText: 'Start free trial' },
-        { href: 'free-trial.html', heading: 'School: £[000] / year', description: 'Unlimited staff at one school. Shared folders and admin tools.', linkText: 'Start free trial' },
-        { href: contactLink('quote', 'orgType=School trust / MAT'), heading: 'Trust: priced per school', description: 'Every school in your trust, with central billing and admin.', linkText: 'Request a trust quote' },
+      { component: 'wf-cards', props: { heading: 'Widgit Online plans', cols: 4, items: [
+        { href: 'free-trial.html', heading: 'Home: £95 a year', description: 'For personal use at home. 1 user. Price includes VAT.', linkText: 'Start free trial' },
+        { href: 'free-trial.html', heading: 'Standard: £310 a year', description: 'Most popular. For UK mainstream schools. Up to 20 users, with Dual Language in 80 languages. Excludes VAT.', linkText: 'Start free trial' },
+        { href: 'free-trial.html', heading: 'Pro: £1,015 a year', description: 'For large schools and organisations. Up to 150 users. Excludes VAT.', linkText: 'Start free trial' },
+        { href: contactLink('quote', 'orgType=School trust / MAT'), heading: 'Enterprise: priced for you', description: 'For MATs, international school groups and organisations across several sites.', linkText: 'Request a quote' },
       ] } },
+      { component: 'wf-text', props: { body: ['Also available: Basic, up to 4 users, £147 a year including VAT, and Plus, up to 50 users, £480 a year excluding VAT.'] } },
       { component: 'wf-accordion', props: { heading: 'Pricing questions', items: [
-        { heading: 'What happens when my trial ends?', body: 'You can choose a plan and keep everything you made. Nothing is charged automatically.' },
-        { heading: 'Can I pay by invoice?', body: 'Yes, schools and organisations can pay by invoice or purchase order.' },
-        { heading: 'Do you offer discounts?', body: 'Multi-site and trust discounts are available. Request a quote for details.' },
-        { heading: 'Are you outside the UK?', body: 'See our pricing for international schools, or choose your region at the top of the page.' },
+        { heading: 'How long is the free trial?', body: 'Widgit Online and InPrint 4 both have a 21-day free trial.' },
+        { heading: 'Can I pay by invoice?', body: 'Yes. Organisations can pay by invoice with an official purchase order on orders over £50. Invoices are due within 30 days.' },
+        { heading: 'Is it cheaper to pay for longer?', body: 'Yes. For example, Standard is £30 a month, £310 a year or £695 for three years. Trusts and multi-site organisations can ask about an Enterprise plan.' },
+        { heading: 'Are you outside the UK?', body: 'Choose your region at the top of the page to find your local partner, or see our pricing for international schools.' },
       ] } },
       { component: 'wf-links', props: { cols: 2, items: [
-        { href: 'plans-pricing-international.html', label: 'Pricing for international schools', description: 'Plans in your currency' },
-        { href: 'shop.html', label: 'Buy InPrint 4 and Symwriter', description: 'Desktop software in the Widgit Shop' },
+        { href: 'plans-pricing-international.html', label: 'Pricing for international schools', description: 'Plans for schools outside the UK' },
+        { href: 'inprint-4.html', label: 'InPrint 4 pricing', description: 'From £104 a year, for Windows' },
       ] } },
       contactPromo('cta-pricing-promo', 'Need a bigger plan?', 'Tell us about your organisation and we will put together a quote.', contactLink('quote'), 'Request a quote'),
     ],
@@ -755,17 +756,18 @@ export const pages: Record<string, Page> = {
   'plans-pricing-international': {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Plans and pricing', heading: 'Pricing for international schools',
-      body: 'Widgit Online plans for schools outside the UK, priced in your currency with support from our international team.',
+      body: 'Widgit Online plans for international schools. You can buy online by card, and prices are in pounds sterling.',
       ctaLabel: 'Request a quote', ctaHref: contactLink('quote', 'orgType=International school'), ctaId: 'cta-intl-quote',
       secondaryLabel: 'Start a free trial', secondaryHref: 'free-trial.html', mediaLabel: 'International pricing illustration',
       breadcrumb: bc(prodCrumb, { label: 'Pricing for international schools', href: 'plans-pricing-international.html' }),
     } },
     blocks: [
-      { component: 'wf-cards', props: { heading: 'Plans', cols: 2, items: [
-        { href: 'free-trial.html', heading: 'School: [currency] [000] / year', description: 'Unlimited staff at one school.', linkText: 'Start free trial' },
-        { href: contactLink('quote', 'orgType=International school'), heading: 'School group: priced per school', description: 'For groups of international schools.', linkText: 'Request a quote' },
+      { component: 'wf-cards', props: { heading: 'Plans', cols: 3, items: [
+        { href: 'free-trial.html', heading: 'Plus: £480 a year', description: 'Recommended for international schools. Up to 50 users, with Dual Language in 80 languages.', linkText: 'Start free trial' },
+        { href: 'free-trial.html', heading: 'Pro: £1,015 a year', description: 'For large international schools. Up to 150 users.', linkText: 'Start free trial' },
+        { href: contactLink('quote', 'orgType=International school'), heading: 'Enterprise: priced for you', description: 'For international school groups.', linkText: 'Request a quote' },
       ] } },
-      { component: 'wf-text', props: { heading: 'Buying in a partner country?', body: ['If you are in Sweden, Norway, Finland or Italy, please buy through our local partner using the region switcher at the top of the page.'] } },
+      { component: 'wf-text', props: { heading: 'Buying in a partner country?', body: ['If you are in Sweden, Norway, Finland, Italy, Canada or Australia, please buy through our local partner. Use the region switcher at the top of the page to find them.'] } },
       contactPromo('cta-intlpricing-promo', 'Talk to our international team', 'We can help with pricing, invoicing and training across time zones.', contactLink('quote', 'orgType=International school')),
     ],
   },
@@ -780,7 +782,7 @@ export const pages: Record<string, Page> = {
     blocks: [
       { component: 'wf-text-media', props: {
         heading: 'Designed with a clear structure',
-        body: ['Every symbol follows the same design rules, so once people learn a few, they can understand many more.', 'Our symbols cover everyday vocabulary as well as curriculum topics, health and public life.'],
+        body: ['Widgit Symbols form a complete visual language of over 100,000 symbols, representing more than 55,000 English words.', 'Every symbol follows a consistent schema designed by expert practitioners, which helps people understand new words and grow their vocabulary.'],
         side: 'left', mediaLabel: 'Symbol design schema',
       } },
       { component: 'wf-cards', props: { heading: 'Use Widgit Symbols', cols: 4, items: [
@@ -790,9 +792,9 @@ export const pages: Record<string, Page> = {
         { href: 'symbol-services.html', heading: 'Symbol Services', description: 'Signage and materials made for you.', imageLabel: 'Signage', linkText: 'See services' },
       ] } },
       { component: 'wf-cards', props: { heading: 'Symbols in Action', cols: 3, items: [
-        { href: 'case-study-trust.html', heading: 'A 14-school trust standardises visual support', category: 'Education', imageLabel: 'Trust case study', linkText: 'Read the story' },
-        { href: 'case-study-nhs.html', heading: 'Clearer appointments at an NHS trust', category: 'Health', imageLabel: 'NHS case study', linkText: 'Read the story' },
-        { href: 'case-study-museum.html', heading: 'A museum visit everyone can plan', category: 'Leisure', imageLabel: 'Museum case study', linkText: 'Read the story' },
+        { href: 'case-study-trust.html', heading: 'Helping secondary students thrive at Ark Boulton Academy', category: 'Education', imageLabel: 'Ark Boulton Academy', linkText: 'Read the story' },
+        { href: 'case-study-nhs.html', heading: 'How the States of Jersey Police use symbols in custody', category: 'Public sector', imageLabel: 'Custody suite', linkText: 'Read the story' },
+        { href: 'case-study-museum.html', heading: 'Inclusive animal experiences with Woburn', category: 'Leisure', imageLabel: 'Woburn Safari Park', linkText: 'Read the story' },
       ] } },
       contactPromo('cta-symbols-promo', 'Want to use Widgit Symbols in your work?', 'Tell us what you have in mind and our licensing team will get back to you.', contactLink('licensing'), 'Make a licensing enquiry'),
     ],
@@ -819,19 +821,24 @@ export const pages: Record<string, Page> = {
   'symbol-friendly': {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Widgit Symbols', heading: 'Become a Symbol-Friendly® Organisation',
-      body: 'Show visitors, patients and staff that you are committed to clear, accessible communication.',
+      body: 'Join our network of Symbol-Friendly organisations, creating inclusive experiences for customers of all abilities.',
       ctaLabel: 'Apply to become Symbol-Friendly', ctaHref: contactLink('symbolfriendly'), ctaId: 'cta-symbol-friendly-apply',
       mediaLabel: 'Symbol-Friendly badge on a building', breadcrumb: bc(symCrumb, { label: 'Become a Symbol-Friendly Organisation', href: 'symbol-friendly.html' }),
     } },
     blocks: [
-      { component: 'wf-text-media', props: { heading: 'What it means', body: ['Symbol-Friendly Organisations use Widgit Symbols to make key information accessible, and display the Symbol-Friendly mark so people know what to expect.'], side: 'left', mediaLabel: 'Symbol-Friendly mark' } },
-      { component: 'wf-cards', props: { heading: 'How it works', cols: 3, items: [
-        { heading: '1. Tell us about your organisation', description: 'Send an enquiry and we will arrange a conversation.' },
-        { heading: '2. Make your information accessible', description: 'We help you plan signage, documents and staff training.' },
-        { heading: '3. Display the mark', description: 'Use the Symbol-Friendly mark on your site and materials.' },
+      { component: 'wf-text-media', props: { heading: 'What it means', body: ['By following our Symbol-Friendly guidelines and using Widgit Symbols, you show your commitment to people with diverse communication needs.', 'Symbol-Friendly organisations include East Midlands Railway, Dudley Zoo and Castle, Nottingham Express Transit and Woburn Safari Park, the UK\'s first symbol-friendly safari park.'], side: 'left', mediaLabel: 'Symbol-Friendly mark' } },
+      { component: 'wf-cards', props: { heading: 'What your partnership includes', cols: 2, items: [
+        { heading: 'A review of your needs', description: 'We look at your Symbol-Friendly requirements with you.' },
+        { heading: 'Accessible symbol materials', description: 'Made by our design and education experts, following your brand guidelines.' },
+      ] } },
+      { component: 'wf-cards', props: { cols: 3, items: [
+        { heading: 'The Symbol-Friendly mark', description: 'Use the official mark on your site and materials.' },
+        { heading: 'A media pack', description: 'Support for your internal and external announcements.' },
+        { heading: 'Staff training', description: 'Help your team use Symbol-Friendly resources well.' },
       ] } },
       { component: 'wf-accordion', props: { heading: 'Questions', items: [
-        { heading: 'Who can become Symbol-Friendly?', body: 'Any organisation that serves the public, from GP surgeries to museums.' },
+        { heading: 'Who can become Symbol-Friendly?', body: 'Any organisation that serves the public, from transport networks to zoos and museums.' },
+        { heading: 'Do you work with the Autism Friendly Award?', body: 'Yes. Widgit partners with the National Autistic Society to support its Autism Friendly Award.' },
         { heading: 'Is there a cost?', body: 'Costs depend on the size of your organisation. Details to be confirmed.' },
       ] } },
       contactPromo('cta-symbol-friendly-promo', 'Ready to start?', 'Your enquiry goes straight to our Symbol-Friendly team.', contactLink('symbolfriendly'), 'Apply now'),
@@ -841,16 +848,16 @@ export const pages: Record<string, Page> = {
   'symbol-licensing': {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Widgit Symbols', heading: 'Symbol copyright and licensing',
-      body: 'Use Widgit Symbols in your own publications, products and services, from a single leaflet to a commercial app.',
+      body: 'Use Widgit Symbols in your publication, website or product to make them accessible to all.',
       ctaLabel: 'Make a licensing enquiry', ctaHref: contactLink('licensing'), ctaId: 'cta-licensing-enquire',
       mediaLabel: 'Symbols in a published book', breadcrumb: bc(symCrumb, { label: 'Symbol copyright and licensing', href: 'symbol-licensing.html' }),
     } },
     blocks: [
-      { component: 'wf-text', props: { heading: 'When do you need a licence?', body: ['If you use Widgit Symbols beyond your own classroom or organisation, for example in something you sell, publish or distribute widely, you need a licence.', 'Our full copyright terms explain what is allowed without a licence.'] } },
+      { component: 'wf-text', props: { heading: 'When do you need a licence?', body: ['If you own a Widgit Symbol product, your licence covers materials used within your organisation. To share materials more widely, you need permission.', 'If you only need a few symbols and acknowledge them, licensing is often free or very low cost. An annual licence fee applies where resources are sold for profit.'] } },
       { component: 'wf-cards', props: { heading: 'Licence types', cols: 3, items: [
-        { heading: 'Publishing', description: 'Books, leaflets and printed materials for distribution.', imageLabel: 'Publishing' },
-        { heading: 'Product and app integration', description: 'Integrate Widgit Symbols into your own software or devices.', imageLabel: 'App integration' },
-        { heading: 'Signage and environments', description: 'Symbols on buildings, transport and public spaces.', imageLabel: 'Signage' },
+        { heading: 'Software and apps', description: 'License the whole Widgit Symbol Set, with a data set linking images to words.', imageLabel: 'App integration' },
+        { heading: 'Documents and websites', description: 'Use symbols in publications and web content you share or sell.', imageLabel: 'Publishing' },
+        { heading: 'Local authorities', description: 'License symbols for any not-for-profit use across your area.', imageLabel: 'Local authority' },
       ] } },
       { component: 'wf-links', props: { cols: 2, items: [
         { href: 'symbol-copyright.html', label: 'Read the Widgit Symbol Copyright terms', description: 'What you can do without a licence' },
@@ -863,21 +870,21 @@ export const pages: Record<string, Page> = {
   'symbol-services': {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Widgit Symbols', heading: 'Symbol Services',
-      body: 'Our team designs and produces accessible symbol materials, signage and custom symbols for your organisation.',
+      body: 'Our specialist design team works in partnership with your organisation to create accessible symbol materials.',
       ctaLabel: 'Discuss a project', ctaHref: contactLink('licensing', 'licenceUse=Signage'), ctaId: 'cta-services-hero',
       mediaLabel: 'Symbol signage installation', breadcrumb: bc(symCrumb, { label: 'Symbol Services', href: 'symbol-services.html' }),
     } },
     blocks: [
       { component: 'wf-cards', props: { heading: 'What we offer', cols: 3, items: [
-        { heading: 'Signage', description: 'Wayfinding and room signs, designed and produced.', imageLabel: 'Signage' },
-        { heading: 'Individual symbol design', description: 'New symbols for your specific vocabulary.', imageLabel: 'Symbol design' },
-        { heading: 'Accessible symbol materials', description: 'Leaflets, guides and documents made accessible.', imageLabel: 'Accessible leaflet' },
+        { heading: 'Signage', description: 'Ready-made, low-cost symbol signs, or bespoke designs.', imageLabel: 'Signage' },
+        { heading: 'Individual symbol design', description: '£35 per symbol, supplied as eps, jpg or png, with a licence for small-scale distribution.', imageLabel: 'Symbol design' },
+        { heading: 'Accessible symbol materials', description: 'Easy read versions of your content, following your brand guidelines.', imageLabel: 'Accessible leaflet' },
       ] } },
       { component: 'wf-cards', props: { cols: 2, items: [
-        { heading: 'Symbol surveys', description: 'An audit of where symbols would help most.', imageLabel: 'Survey' },
-        { heading: 'Product design and manufacture', description: 'Symbol-supported products made to order.', imageLabel: 'Product' },
+        { heading: 'Symbol surveys', description: 'Symbol versions of your surveys, so clients can engage and respond clearly.', imageLabel: 'Survey' },
+        { heading: 'Printing and manufacturing', description: 'Cards, fans, key rings and leaflets, designed and printed for you, including on waterproof paper.', imageLabel: 'Printed materials' },
       ] } },
-      { component: 'wf-quote', props: { items: [quote('The new signage made our building easier for everyone to navigate.', 'Facilities manager, hospital')] } },
+      { component: 'wf-quote', props: { items: [Q.signage] } },
       contactPromo('cta-services-promo', 'Start a project', 'Tell us what you need and we will come back with options.', contactLink('licensing', 'licenceUse=Signage'), 'Discuss a project'),
     ],
   },
@@ -889,32 +896,36 @@ export const pages: Record<string, Page> = {
     } },
     blocks: [
       { component: 'wf-cards', props: { cols: 3, filters: ['All', 'Education', 'Health', 'Leisure', 'Public sector'], items: [
-        { href: 'case-study-trust.html', category: 'Education', heading: 'A 14-school trust standardises visual support', description: 'One licence, one approach, every school.', imageLabel: 'Trust', linkText: 'Read the story' },
-        { href: 'case-study-nhs.html', category: 'Health', heading: 'Clearer appointments at an NHS trust', description: 'Symbol-supported letters reduce missed appointments.', imageLabel: 'Hospital', linkText: 'Read the story' },
-        { href: 'case-study-museum.html', category: 'Leisure', heading: 'A museum visit everyone can plan', description: 'Visual guides for visitors with autism.', imageLabel: 'Museum', linkText: 'Read the story' },
-        { href: 'case-study-trust.html', category: 'Education', heading: 'Symbols across a primary school', description: 'From one classroom to the whole school.', imageLabel: 'Primary school', linkText: 'Read the story' },
-        { href: 'case-study-nhs.html', category: 'Public sector', heading: 'Easy-read council consultation', description: 'More residents had their say.', imageLabel: 'Council', linkText: 'Read the story' },
-        { href: 'case-study-museum.html', category: 'Leisure', heading: 'Accessible signage at a visitor attraction', description: 'Wayfinding for every visitor.', imageLabel: 'Attraction', linkText: 'Read the story' },
+        { href: 'case-study-trust.html', category: 'Education', heading: 'Helping secondary students thrive at Ark Boulton Academy', description: 'A whole-school approach to communication and inclusion.', imageLabel: 'Ark Boulton Academy', linkText: 'Read the story' },
+        { href: 'case-study-nhs.html', category: 'Public sector', heading: 'How the States of Jersey Police use symbols in custody', description: 'Helping detainees feel calm, informed and supported.', imageLabel: 'Custody suite', linkText: 'Read the story' },
+        { href: 'case-study-museum.html', category: 'Leisure', heading: 'Inclusive animal experiences with Woburn', description: 'The UK\'s first symbol-friendly safari park.', imageLabel: 'Woburn Safari Park', linkText: 'Read the story' },
+        { href: 'case-study-trust.html', category: 'Education', heading: 'Supporting EAL learners at GEMS Winchester School, Dubai', description: 'Dual-language symbols for English and Arabic speakers.', imageLabel: 'GEMS Winchester School', linkText: 'Read the story' },
+        { href: 'case-study-nhs.html', category: 'Public sector', heading: 'Symbol-friendly journeys with Nottingham Trams', description: 'Making public transport less daunting and more inclusive.', imageLabel: 'Nottingham tram', linkText: 'Read the story' },
+        { href: 'case-study-museum.html', category: 'Health', heading: 'Kylie Lang\'s legacy of symbolised support for families', description: 'Overgate Hospice resources for children with additional needs.', imageLabel: 'Overgate Hospice', linkText: 'Read the story' },
       ] } },
       trialPromo('cta-sia-promo'),
     ],
   },
 
-  'case-study-trust': caseStudy('case-study-trust', 'Education', 'A 14-school trust standardises visual support',
-    'How one multi-academy trust gave every school the same tools and approach to symbols.',
-    ['Before Widgit, each school in the trust bought its own resources. Practice varied, and staff moving between schools had to relearn tools.', 'The Head of Inclusion set a goal: one consistent approach to visual support across all 14 schools.'],
-    ['The trust moved to a single Widgit Online licence with shared folders. Inclusion leads were trained centrally and cascaded training to staff.', 'Within a year, every school used the same visual timetable format, and resources were shared across sites.'],
-    'school-trusts.html', 'For school trusts'),
-  'case-study-nhs': caseStudy('case-study-nhs', 'Health', 'Clearer appointments at an NHS trust',
-    'Symbol-supported appointment letters helped patients understand what to expect.',
-    ['Patients with learning disabilities were missing appointments because letters were hard to follow.', 'The trust worked with Widgit to redesign key letters and signage.'],
-    ['Appointment letters now use symbols to explain the time, place and what to bring.', 'Staff report fewer phone calls asking for clarification. Figures to be confirmed with the client.'],
-    'health-social-care.html', 'For health and social care'),
-  'case-study-museum': caseStudy('case-study-museum', 'Leisure', 'A museum visit everyone can plan',
-    'A visual guide helped visitors with autism plan their day before they arrived.',
-    ['Families told the museum that not knowing what to expect stopped them visiting.', 'The museum commissioned a symbol-supported visit guide and wayfinding signs.'],
-    ['Visitors can now download the guide before their visit and follow the same symbols on site.', 'The museum became a Symbol-Friendly Organisation.'],
-    'leisure-tourism.html', 'For leisure and tourism'),
+  // Real success stories from widgit.com/success-stories (summarised).
+  'case-study-trust': caseStudy('case-study-trust', 'Education', 'Helping secondary students thrive at Ark Boulton Academy',
+    'A whole-school approach to communication and inclusion in a secondary school of around 900 students.',
+    ['Ark Boulton Academy has around 900 students, including autistic students, students with ADHD and students with increasingly complex needs.', 'After Colourful Semantics training at Widgit, the school began introducing symbols across the academy.'],
+    ['It started with sensory circuits and pocket-sized "secret circuit" cards for over 100 students. Over a half-term trial, pupils with social, emotional and mental health needs saw a 60% average reduction in classroom consequences.', 'Task boards, Now and Next boards and symbolised working walls are now used across most classrooms, so no student feels singled out.'],
+    'school-trusts.html', 'For schools and trusts',
+    rq('We ensure symbolised communication is used to benefit all learners, preventing any student from feeling singled out.', 'Victoria Hudson', 'Vice Principal (Safeguarding and Inclusion), Ark Boulton Academy')),
+  'case-study-nhs': caseStudy('case-study-nhs', 'Public sector', 'How the States of Jersey Police use Widgit Symbols in custody',
+    'Symbolised guides help detainees feel calm, informed and supported.',
+    ['Custody can feel daunting and stressful. Understanding information and procedures can be hard, especially for people with learning difficulties or disabilities, and for young people.', 'The States of Jersey Police wanted every detainee to understand their rights and entitlements, whatever their needs.'],
+    ['A specially designed symbols pack now supports detainees with specific needs. Booking in and PACE rights stay the same, with symbolised information sheets alongside.', 'The materials also help Appropriate Adults, duty lawyers and other partners who work with detainees.'],
+    'public-services.html', 'For public services',
+    rq('The main purpose of using Widgit Symbols is to improve our custody provision to all detainees.', 'Manny De Freitas', 'Community Response Inspector, States of Jersey Police')),
+  'case-study-museum': caseStudy('case-study-museum', 'Leisure', 'Inclusive animal experiences with Woburn Safari Park',
+    'How Woburn became the UK\'s first symbol-friendly safari park.',
+    ['Woburn Safari Park wanted visitors of all ages, abilities and backgrounds to enjoy the full experience.', 'For the birthday of Wednesday, their one-eyed Bactrian camel, they invited children from Windmill School in Luton to join the celebrations.'],
+    ['Before the visit, students received a Story to Help explaining the party schedule. On the day, communication boards supported the meet and greet, and song sheets helped everyone join in.', 'By embedding symbols across the park, Woburn became the UK\'s first symbol-friendly safari park.'],
+    'leisure-tourism.html', 'For leisure and tourism',
+    rq('Today was also about celebrating the fact we\'re the first zoological collection in the world to become symbol-friendly.', 'Natasha Kyle', 'Head of Education and Customer Liaison, Woburn Safari Park')),
 
   // ===================== RESOURCES =====================
   resources: {
@@ -923,30 +934,30 @@ export const pages: Record<string, Page> = {
       breadcrumb: bc({ label: 'Resources', href: 'resources.html' }),
     } },
     blocks: [
-      { component: 'wf-text', props: { heading: 'Filter resources', body: ['Subscription tier: Free · Widgit Online subscribers', 'Format: Printable PDF · Widgit Online template · Communication board', 'The tabs below filter by topic. Tier and format filters will appear as dropdowns in design.'] } },
-      { component: 'wf-cards', props: { cols: 4, filters: ['All', 'Routines', 'Social stories', 'Literacy', 'Health'], items: [
-        { href: 'resource-visual-timetable.html', id: 'card-res-visual-timetable', category: 'Routines', heading: 'Daily visual timetable', description: 'Free · Printable PDF', imageLabel: 'Visual timetable', linkText: 'View resource' },
-        { href: 'resource-dentist-story.html', category: 'Social stories', heading: 'Going to the dentist', description: 'Free · Printable PDF', imageLabel: 'Dentist social story', linkText: 'View resource' },
-        { href: 'resource-phonics-mat.html', category: 'Literacy', heading: 'Phonics word mat', description: 'Subscribers · Widgit Online template', imageLabel: 'Phonics mat', linkText: 'View resource' },
-        { href: 'resource-visual-timetable.html', category: 'Routines', heading: 'Morning routine strip', description: 'Free · Printable PDF', imageLabel: 'Morning routine', linkText: 'View resource' },
-        { href: 'resource-dentist-story.html', category: 'Health', heading: 'Feelings board', description: 'Free · Communication board', imageLabel: 'Feelings board', linkText: 'View resource' },
-        { href: 'resource-dentist-story.html', category: 'Social stories', heading: 'Starting a new school', description: 'Subscribers · Widgit Online template', imageLabel: 'New school story', linkText: 'View resource' },
-        { href: 'resource-phonics-mat.html', category: 'Literacy', heading: 'Story sequencing cards', description: 'Subscribers · Printable PDF', imageLabel: 'Sequencing cards', linkText: 'View resource' },
-        { href: 'resource-dentist-story.html', category: 'Health', heading: 'Hand-washing steps', description: 'Free · Printable PDF', imageLabel: 'Hand-washing', linkText: 'View resource' },
+      { component: 'wf-text', props: { heading: 'Filter resources', body: ['Price: Free · Free with subscription', 'Format: PDF · InPrint 4 · InPrint 3 · Widgit Online', 'The tabs below filter by category. Price and format filters will appear as dropdowns in design.'] } },
+      { component: 'wf-cards', props: { cols: 4, filters: ['All', 'Curriculum', 'Literacy and language', 'Life skills', 'Seasonal'], items: [
+        { href: 'resource-visual-timetable.html', id: 'card-res-visual-timetable', category: 'Curriculum', heading: 'Back to School Teacher Toolkit', description: 'Free · Over 50 pages to set up your classroom', imageLabel: 'Teacher toolkit', linkText: 'View resource' },
+        { href: 'resource-dentist-story.html', category: 'Seasonal', heading: 'Bonfire Night: Story to Help', description: 'Free · Understanding fireworks and staying safe', imageLabel: 'Bonfire Night story', linkText: 'View resource' },
+        { href: 'resource-phonics-mat.html', category: 'Literacy and language', heading: 'Colourful Semantics Pack', description: 'Free with subscription', imageLabel: 'Colourful Semantics', linkText: 'View resource' },
+        { href: 'resource-phonics-mat.html', category: 'Life skills', heading: 'Transition Pack', description: 'Free with subscription · Preparing for each stage of education', imageLabel: 'Transition Pack', linkText: 'View resource' },
+        { href: 'resource-dentist-story.html', category: 'Seasonal', heading: 'Halloween Pack', description: 'Free · Taking part in Halloween and trick or treating', imageLabel: 'Halloween Pack', linkText: 'View resource' },
+        { href: 'resource-phonics-mat.html', category: 'Life skills', heading: 'Alternative Provision Pack', description: 'Free with subscription · Learning, regulation and wellbeing', imageLabel: 'Alternative Provision Pack', linkText: 'View resource' },
+        { href: 'resource-phonics-mat.html', category: 'Literacy and language', heading: 'Dual Language Getting Started with Symbols Pack', description: 'Free with subscription', imageLabel: 'Dual Language pack', linkText: 'View resource' },
+        { href: 'resource-dentist-story.html', category: 'Seasonal', heading: 'Learning about the Christmas Play: Story to Help', description: 'Free', imageLabel: 'Christmas Play story', linkText: 'View resource' },
       ] } },
       trialPromo('cta-resources-promo'),
     ],
   },
 
-  'resource-visual-timetable': resourcePage('resource-visual-timetable', 'Routines', 'Daily visual timetable', 'Free · Printable PDF',
-    'A printable timetable that helps children see and follow the shape of their day at school or at home.',
-    ['Print and cut out the symbol cards, then arrange them in order for the day.', 'Move each card to the "finished" box as the activity ends, so your child can see what comes next.']),
-  'resource-dentist-story': resourcePage('resource-dentist-story', 'Social stories', 'Going to the dentist', 'Free · Printable PDF',
-    'A symbol-supported social story that explains what happens at a dental appointment.',
-    ['Read the story together a few days before the appointment, and again on the day.', 'Each page shows one step, from the waiting room to going home.']),
-  'resource-phonics-mat': resourcePage('resource-phonics-mat', 'Literacy', 'Phonics word mat', 'Subscribers · Widgit Online template',
-    'An editable phonics mat with symbol-supported words for each sound.',
-    ['Open the template in Widgit Online to change the words for your class.', 'Print it as a desk mat or display it on the board.']),
+  'resource-visual-timetable': resourcePage('resource-visual-timetable', 'Curriculum', 'Back to School Teacher Toolkit', 'Free',
+    'Over 50 pages of free symbol materials to help you prepare and set up your classroom for a new academic year.',
+    ['Download the toolkit and choose the pages that suit your class.', 'Use the materials to set up routines, labels and displays before term starts.']),
+  'resource-dentist-story': resourcePage('resource-dentist-story', 'Seasonal', 'Bonfire Night: Story to Help', 'Free',
+    'A symbolised story to help children understand Bonfire Night and fireworks, and how to take part safely.',
+    ['Read the story together in the days before Bonfire Night, and again on the night.', 'Each page explains one part of the evening, so children know what to expect.']),
+  'resource-phonics-mat': resourcePage('resource-phonics-mat', 'Literacy and language', 'Colourful Semantics Pack', 'Free with subscription',
+    'Symbolised resources aligned with the Colourful Semantics approach, to help learners develop their spoken and written language.',
+    ['Open the pack in your Widgit software and edit the resources for your learners.', 'Which subscriptions include this pack is to be confirmed with Widgit.']),
 
   // ===================== SUPPORT =====================
   support: {
@@ -983,7 +994,7 @@ export const pages: Record<string, Page> = {
         { href: 'support-docs.html', heading: 'Installation guides', description: 'Step-by-step installs for InPrint 4 and Symwriter.', linkText: 'Open guides' },
         { href: 'login.html', heading: 'Reset your password', description: 'Get back into Widgit Online.', linkText: 'Go to log in' },
       ] } },
-      { component: 'wf-text', props: { heading: 'Before you contact us', body: ['Please have your licence number or Widgit Online email address ready, plus the product name and version.', 'Support hours: [to be confirmed].'] } },
+      { component: 'wf-text', props: { heading: 'Before you contact us', body: ['Please have your licence number or Widgit Online email address ready, plus the product name and version.', 'Call 01926 333680 or email support@widgit.com. Support hours: [to be confirmed].'] } },
       contactPromo('cta-tech-promo', 'Still stuck?', 'Our support team will reply by email.', contactLink('support'), 'Contact support'),
     ],
   },
@@ -992,13 +1003,13 @@ export const pages: Record<string, Page> = {
     hero: { component: 'wf-page-header', props: { heading: 'Frequently asked questions', subtitle: 'Quick answers about accounts, licences and products.', breadcrumb: bc(supCrumb, { label: 'FAQs', href: 'faqs.html' }) } },
     blocks: [
       { component: 'wf-accordion', props: { heading: 'Accounts and licences', items: [
-        { heading: 'How do I add staff to our school account?', body: 'School admins can invite staff from the Widgit Online admin area.' },
-        { heading: 'Where do I find my licence number?', body: 'It is in your order confirmation email and in My Shop Account.' },
-        { heading: 'Can I move my licence to a new computer?', body: 'Yes. Deactivate it on the old computer first. See Support Docs for steps.' },
+        { heading: 'How many people can use our Widgit Online account?', body: 'It depends on your plan: 1 user on Home, up to 4 on Basic, 20 on Standard, 50 on Plus and 150 on Pro. Enterprise plans cover several sites.' },
+        { heading: 'How do InPrint 4 licences work?', body: 'InPrint 4 licences cover a set number of installations at a single location. For more than one site, choose a Multi Site licence.' },
+        { heading: 'Can I pay by invoice?', body: 'Yes. Organisations can pay by invoice with an official purchase order on orders over £50.' },
       ] } },
       { component: 'wf-accordion', props: { heading: 'Products', items: [
-        { heading: 'Which product should I choose?', body: 'Most schools start with Widgit Online. InPrint 4 suits detailed print design.' },
-        { heading: 'Do Widgit products work on Chromebooks?', body: 'Widgit Online works in Chrome. Desktop software requires Windows or Mac.' },
+        { heading: 'Which product should I choose?', body: 'Widgit Online is ideal for anyone starting out, with template-driven resources in your browser. InPrint 4 suits advanced practitioners who want full design control.' },
+        { heading: 'Which devices and browsers are supported?', body: 'Widgit Online works in current versions of Chrome, Edge, Firefox and Safari (Mac). Editing on tablets and phones is not fully supported. InPrint 4 is made for Windows.' },
       ] } },
       contactPromo('cta-faqs-contact', 'Did not find your answer?', 'Send your question to our support team.', contactLink('support'), 'Contact support'),
     ],
@@ -1007,17 +1018,26 @@ export const pages: Record<string, Page> = {
   training: {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Support', heading: 'Training',
-      body: 'Courses for teachers, support staff, therapists and whole organisations, online or in person.',
+      body: 'Whether you are new to Widgit or building your skills, join a free webinar or book training tailored to your team.',
       ctaLabel: 'Enquire about training', ctaHref: contactLink('training'), ctaId: 'cta-training-hero', mediaLabel: 'Training session',
       breadcrumb: bc(supCrumb, { label: 'Training', href: 'training.html' }),
     } },
     blocks: [
-      { component: 'wf-cards', props: { heading: 'Courses', cols: 3, items: [
-        { href: 'events.html', heading: 'Getting started with Widgit Online', description: 'Online · 1 hour', imageLabel: 'Course', linkText: 'See dates' },
-        { href: 'events.html', heading: 'Symbols for inclusive classrooms', description: 'Online or in school · Half day', imageLabel: 'Course', linkText: 'See dates' },
-        { href: contactLink('training'), heading: 'Whole-school INSET', description: 'In person · Tailored to your school', imageLabel: 'INSET', linkText: 'Enquire' },
+      { component: 'wf-cards', props: { heading: 'Free live webinars', cols: 2, items: [
+        { href: 'event-webinar.html', category: 'Getting started', heading: 'Introduction to Widgit Online', description: 'Ideal for new users. An introduction to Widgit Symbols and making your own resources.', linkText: 'Book your free place' },
+        { href: 'events.html', category: 'Getting started', heading: 'InPrint 4: Getting Started', description: 'Ideal for new users. Key features, and bespoke and template-based resources.', linkText: 'Book your free place' },
       ] } },
-      { component: 'wf-quote', props: { items: [quote('The INSET gave every member of staff the confidence to start the next day.', 'Deputy Head, primary school')] } },
+      { component: 'wf-cards', props: { cols: 3, items: [
+        { href: 'events.html', category: 'Next steps', heading: 'Mastering Widgit Online', description: 'For experienced users who want to do more.', linkText: 'Book your free place' },
+        { href: 'events.html', category: 'Next steps', heading: 'Mastering InPrint 4', description: 'Templates, presentations, custom wordlists and advanced editing.', linkText: 'Book your free place' },
+        { href: 'events.html', category: 'Inspiration', heading: 'Widgit Symbols Inspiration', description: 'Real-life case studies from a range of settings.', linkText: 'Book your free place' },
+      ] } },
+      { component: 'wf-text', props: { body: ['Can\'t make it live? Every webinar is also available to watch on demand.'] } },
+      { component: 'wf-cards', props: { heading: 'Training tailored to your organisation', cols: 3, items: [
+        { href: contactLink('training'), heading: 'Online training: £175 an hour', description: 'Bespoke sessions your team can join from one or several locations.', linkText: 'Enquire' },
+        { href: contactLink('training'), heading: 'On-site half day: £550', description: 'Delivered at your school or organisation. Travel costs may be extra.', linkText: 'Enquire' },
+        { href: contactLink('training'), heading: 'On-site full day: £800', description: 'Delivered at your school or organisation. Travel and accommodation may be extra.', linkText: 'Enquire' },
+      ] } },
       contactPromo('cta-training-promo', 'Plan training for your team', 'Tell us about your team and we will suggest the right course.', contactLink('training'), 'Enquire about training'),
     ],
   },
@@ -1026,20 +1046,20 @@ export const pages: Record<string, Page> = {
     hero: { component: 'wf-page-header', props: { heading: 'Events', subtitle: 'Webinars, exhibitions, presentations, conferences, study days and training. Filter by type.', breadcrumb: bc(supCrumb, { label: 'Events', href: 'events.html' }) } },
     blocks: [
       { component: 'wf-cards', props: { cols: 3, filters: ['All', 'Online', 'In person'], items: [
-        { href: 'event-webinar.html', category: 'Online', heading: 'Webinar: Symbols in the mainstream classroom', description: 'Webinar · [Date] · Free', imageLabel: 'Webinar', linkText: 'View event' },
+        { href: 'event-webinar.html', category: 'Online', heading: 'Introduction to Widgit Symbols and Widgit Online', description: 'Free webinar · [Date]', imageLabel: 'Webinar', linkText: 'View event' },
         { href: 'event-exhibition.html', category: 'In person', heading: 'Widgit at the Education Show', description: 'Exhibition · [Date] · [Venue]', imageLabel: 'Exhibition', linkText: 'View event' },
-        { href: 'event-webinar.html', category: 'Online', heading: 'Getting started with Widgit Online', description: 'Training · [Date] · Free', imageLabel: 'Training', linkText: 'View event' },
+        { href: 'event-webinar.html', category: 'Online', heading: 'Mastering Widgit Online', description: 'Free webinar · [Date]', imageLabel: 'Webinar', linkText: 'View event' },
+        { href: 'event-webinar.html', category: 'Online', heading: 'InPrint 4: Getting Started', description: 'Free webinar · [Date]', imageLabel: 'Webinar', linkText: 'View event' },
         { href: 'event-exhibition.html', category: 'In person', heading: 'SEND study day', description: 'Study day · [Date] · [Venue]', imageLabel: 'Study day', linkText: 'View event' },
-        { href: 'event-exhibition.html', category: 'In person', heading: 'Inclusive communication conference', description: 'Conference · [Date] · [Venue]', imageLabel: 'Conference', linkText: 'View event' },
-        { href: 'event-webinar.html', category: 'Online', heading: 'Presentation: symbols in healthcare', description: 'Presentation · [Date] · Free', imageLabel: 'Presentation', linkText: 'View event' },
+        { href: 'event-webinar.html', category: 'Online', heading: 'Widgit Symbols Inspiration', description: 'Free webinar · [Date]', imageLabel: 'Webinar', linkText: 'View event' },
       ] } },
       trialPromo('cta-events-promo'),
     ],
   },
 
-  'event-webinar': eventPage('event-webinar', 'Online · Webinar', 'Webinar: Symbols in the mainstream classroom',
-    'A free 45-minute webinar for primary teachers on using symbols with the whole class.',
-    ['Learn simple ways to use symbols for routines, instructions and vocabulary in a mixed class.', 'Includes a live demo of Widgit Online and time for questions.'], '[Date] · [Time] UK · Online'),
+  'event-webinar': eventPage('event-webinar', 'Online · Free webinar', 'Introduction to Widgit Symbols and Widgit Online',
+    'A free webinar for anyone new to Widgit Online.',
+    ['This webinar gives an overview of Widgit Symbols and introduces how to create your own personalised resources in Widgit Online.', 'Join live, or watch on demand at a time that suits you.'], '[Date] · [Time] UK · Online'),
   'event-exhibition': eventPage('event-exhibition', 'In person · Exhibition', 'Widgit at the Education Show',
     'Visit our stand to see the latest Widgit products and talk to our team.',
     ['Get a hands-on demo of Widgit Online and InPrint 4.', 'Book a time with our education team in advance, or just drop by.'], '[Date] · [Venue] · Stand [00]'),
@@ -1047,7 +1067,7 @@ export const pages: Record<string, Page> = {
   'widgit-centres': {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: 'Support', heading: 'Widgit Centres',
-      body: 'Widgit Centres are local organisations offering advice, demonstrations and training in using symbols.',
+      body: 'Widgit Centres are a UK-wide network of organisations offering local advice, guidance and support on Widgit products.',
       ctaLabel: 'Ask about your nearest centre', ctaHref: contactLink('general'), ctaId: 'cta-centres-hero', mediaLabel: 'Map of Widgit Centres',
       breadcrumb: bc(supCrumb, { label: 'Widgit Centres', href: 'widgit-centres.html' }),
     } },
@@ -1070,7 +1090,7 @@ export const pages: Record<string, Page> = {
       mediaLabel: 'Widgit office', breadcrumb: bc({ label: 'Contact us', href: 'contact.html' }),
     } },
     blocks: [
-      { component: 'wf-text', props: { body: ['Pick a topic below. Sales, licensing, Symbol-Friendly, support and training enquiries are each routed to a dedicated team, so you will hear from someone who can help. We aim to reply within [2] working days.'] } },
+      { component: 'wf-text', props: { body: ['Pick a topic below. Sales, licensing, Symbol-Friendly, support and training enquiries are each routed to a dedicated team, so you will hear from someone who can help. We aim to reply within [2] working days.', 'Prefer to call or email? Call 01926 333680, or email info@widgit.com for sales, support@widgit.com for technical help and copyright@widgit.com for licensing. Our address is Widgit Software, 1st Floor, Bishops House, Artemis Drive, Tachbrook Park, Warwick CV34 6UD.'] } },
       { component: 'wf-form', anchorId: 'contact-form', props: {
         variantsLabel: 'Enquiry type',
         variants: [
@@ -1094,7 +1114,7 @@ export const pages: Record<string, Page> = {
               { name: 'product', label: 'Products you are interested in', type: 'select', options: ['Widgit Online', 'InPrint 4', 'Symwriter', 'Digital Accessibility', 'Not sure yet'] },
               { name: 'message', label: 'Anything else we should know?', type: 'textarea' },
             ] },
-          { key: 'licensing', tabLabel: 'Symbol licensing', autoSelectParam: 'licensing', heading: 'Licensing enquiry', intro: 'Goes to our licensing team.', submitLabel: 'Send licensing enquiry', submitId: 'submit-contact-licensing',
+          { key: 'licensing', tabLabel: 'Symbol licensing', autoSelectParam: 'licensing', heading: 'Licensing enquiry', intro: 'Goes to our licensing team. You can also email copyright@widgit.com.', submitLabel: 'Send licensing enquiry', submitId: 'submit-contact-licensing',
             successHeading: 'Enquiry sent', successBody: 'Our licensing team will review your project and reply within 5 working days.',
             fields: [
               { name: 'name', label: 'Your name', type: 'text', required: true },
@@ -1147,7 +1167,7 @@ export const pages: Record<string, Page> = {
         { href: 'inprint-4.html', category: 'Products', heading: 'InPrint 4', description: 'Print-ready timetable templates.', linkText: 'View product' },
         { href: 'faqs.html', category: 'Support', heading: 'How do I edit a timetable template?', description: 'FAQ', linkText: 'Read answer' },
         { href: 'support-docs.html', category: 'Support', heading: 'Guide: printing timetables', description: 'Support Docs', linkText: 'Open guide' },
-        { href: 'case-study-trust.html', category: 'Symbols', heading: 'A trust standardises visual timetables', description: 'Symbols in Action', linkText: 'Read the story' },
+        { href: 'case-study-trust.html', category: 'Symbols', heading: 'Ark Boulton Academy: Now and Next boards in every classroom', description: 'Symbols in Action', linkText: 'Read the story' },
         { href: 'universal-language.html', category: 'Symbols', heading: 'Symbols as a Universal Language', description: 'Widgit Symbols', linkText: 'Learn more' },
       ] } },
       contactPromo('cta-search-promo', 'Can\'t find what you need?', 'Ask our team and we will point you in the right direction.', contactLink('general')),
@@ -1155,12 +1175,12 @@ export const pages: Record<string, Page> = {
   },
 
   // ===================== COUNTRY LANDING PAGES =====================
-  sweden: countryPage({ slug: 'sweden', country: 'Sweden', partner: true, language: 'Swedish', note: 'Schools and organisations in Sweden buy Widgit through our local partner, with Swedish symbol vocabulary and support.' }),
-  norway: countryPage({ slug: 'norway', country: 'Norway', partner: true, language: 'Norwegian', note: 'Schools and organisations in Norway buy Widgit through our local partner, with Norwegian symbol vocabulary and support.' }),
-  finland: countryPage({ slug: 'finland', country: 'Finland', partner: true, language: 'Finnish', note: 'Schools and organisations in Finland buy Widgit through our local partner, with Finnish symbol vocabulary and support.' }),
-  italy: countryPage({ slug: 'italy', country: 'Italy', partner: true, language: 'Italian', note: 'Schools and organisations in Italy buy Widgit through our local partner, with Italian symbol vocabulary and support.' }),
-  canada: countryPage({ slug: 'canada', country: 'Canada', partner: false, language: 'English', note: 'Widgit Symbols for schools, health services and organisations across Canada.' }),
-  australia: countryPage({ slug: 'australia', country: 'Australia', partner: false, language: 'English', note: 'Widgit Symbols for schools, health services and organisations across Australia.' }),
+  sweden: countryPage({ slug: 'sweden', country: 'Sweden', partner: 'Symbolbruket AB', address: 'Storgatan 28, 582 28 Linköping, Sweden', email: 'info@symbolbruket.se', phone: '(+46) 13-712 70', web: 'www.symbolbruket.se', language: 'Swedish', products: ['InPrint 4', 'InPrint 3', 'SymWriter 2', 'Widgit Online', 'Widgit Go'] }),
+  norway: countryPage({ slug: 'norway', country: 'Norway', partner: 'Normedia', address: 'Håkonkastet 5, 1453 Bjørnemyr, Norway', email: 'kontakt@normedia.no', phone: '(+47) 66 915440', web: 'www.normedia.no', language: 'Norwegian', products: ['InPrint 3', 'SymWriter 2', 'Widgit Online', 'Widgit Writer', 'Widgit Go'] }),
+  finland: countryPage({ slug: 'finland', country: 'Finland', partner: 'symboLink', address: 'Risviksvägen 4 A 8, 00200 Helsingfors, Finland', email: 'info@symbolink.fi', phone: '+358 41 3288628', web: 'www.symbolink.fi', language: 'Finnish', products: ['SymWriter', 'Kerro kuvin 3 (InPrint 3)', 'Widgit Online', 'Widgit Go'] }),
+  italy: countryPage({ slug: 'italy', country: 'Italy', partner: 'Auxilia', address: 'Viale Carlo Sigonio, 227, 41124 Modena, Italy', email: 'info@auxilia.it', phone: '059 216311', web: 'www.auxilia.it', language: 'Italian', products: ['InPrint 3', 'SymWriter 2', 'Widgit Online', 'Widgit Go'] }),
+  canada: countryPage({ slug: 'canada', country: 'Canada', partner: 'Bridges', address: '2123 McCowan Road, Scarborough, Ontario, M1S 3Y6', email: 'info@bridges-canada.com', phone: 'Toll free 1-800-353-1107, or 905-542-7232', web: 'www.bridges-canada.com', language: 'English and French', products: ['InPrint 4 (English and French)', 'Widgit Online (English and French)', 'SymWriter 2 (English and French)', 'First Keys 3'] }),
+  australia: countryPage({ slug: 'australia', country: 'Australia', partner: 'Spectronics', address: 'PO Box 88, Rochedale, Queensland 4123, Australia', email: 'mail@spectronics.com.au', phone: '(+61) 7 3808 6833', web: 'www.spectronics.com.au', language: 'English, covering Australia and New Zealand', products: ['Widgit Online', 'SymWriter 2', 'InPrint 3'] }),
 
   // ===================== EXTERNAL HAND-OFFS =====================
   'free-trial': handoffPage({ slug: 'free-trial', name: 'Start your free trial', destination: 'Widgit Online sign-up',
@@ -1202,13 +1222,14 @@ export const pages: Record<string, Page> = {
     { heading: 'Cookies', body: ['Placeholder for cookie information and preferences.'] },
   ]),
   'symbol-copyright': legalPage('Widgit Symbol Copyright', 'What you can and cannot do with Widgit Symbols without a licence.', 'symbol-copyright', [
-    { heading: 'Using symbols you have made', body: ['Placeholder for Widgit\'s symbol copyright terms. Final copy to be supplied by Widgit.'] },
-    { heading: 'When you need a licence', body: ['Commercial, published or widely distributed use requires a licence. See Symbol copyright and licensing.'] },
+    { heading: 'Sharing materials you have made', body: ['If you have a licence and your files can only be opened in licensed Widgit software, there is no extra charge. If you share symbols in another form, printed or electronic, including on a website, charges may apply.', 'Licence holders can give away a small number of printed or web documents for free, as long as all of them together use no more than 100 different symbols.'] },
+    { heading: 'Selling materials', body: ['Anyone who wants to sell resources containing Widgit Symbols must apply for permission. Charges may apply.'] },
+    { heading: 'Acknowledgement', body: ['Every resource, free or for sale, must show: Widgit Symbols © Widgit Software Ltd 2002-[current year], www.widgit.com.', 'For copyright enquiries, email copyright@widgit.com.'] },
   ]),
 }
 
 // Templates declared as functions below `pages` are hoisted, so they can be used above.
-function caseStudy(slug: string, category: string, title: string, standfirst: string, challenge: string[], result: string[], sectorHref: string, sectorLabel: string): Page {
+function caseStudy(slug: string, category: string, title: string, standfirst: string, challenge: string[], result: string[], sectorHref: string, sectorLabel: string, q?: { quote: string; attribution: string; role?: string }): Page {
   return {
     hero: { component: 'wf-standard-hero', props: {
       eyebrow: `Case study · ${category}`, heading: title, body: standfirst, mediaLabel: `${title} hero image`,
@@ -1218,7 +1239,7 @@ function caseStudy(slug: string, category: string, title: string, standfirst: st
       { component: 'wf-text', props: { heading: 'The challenge', body: challenge, centered: true } },
       { component: 'wf-media', props: { type: 'image', label: 'Symbols in use on site', caption: 'Caption to be supplied.', centered: true } },
       { component: 'wf-text', props: { heading: 'What changed', body: result, centered: true } },
-      { component: 'wf-quote', props: { items: [quote('Symbols are now part of how we work, not an extra.', `Project lead, ${category.toLowerCase()} organisation`)] } },
+      { component: 'wf-quote', props: { items: [q || quote('Symbols are now part of how we work, not an extra.', `Project lead, ${category.toLowerCase()} organisation`)] } },
       { component: 'wf-share', props: { centered: true } },
       { component: 'wf-cards', props: { heading: 'Related', cols: 3, items: [
         { href: sectorHref, heading: sectorLabel, description: 'See how Widgit supports organisations like this.', imageLabel: 'Sector', linkText: 'Find out more' },
@@ -1243,9 +1264,9 @@ function resourcePage(slug: string, topic: string, title: string, meta: string, 
       { component: 'wf-text', props: { heading: 'How to use it', body: howTo } },
       { component: 'wf-media', props: { type: 'image', label: 'Page-by-page preview of the resource' } },
       { component: 'wf-cards', props: { heading: 'Related resources', cols: 3, items: [
-        { href: 'resource-visual-timetable.html', heading: 'Daily visual timetable', description: 'Free · Printable PDF', imageLabel: 'Timetable', linkText: 'View resource' },
-        { href: 'resource-dentist-story.html', heading: 'Going to the dentist', description: 'Free · Printable PDF', imageLabel: 'Social story', linkText: 'View resource' },
-        { href: 'resource-phonics-mat.html', heading: 'Phonics word mat', description: 'Subscribers · Widgit Online template', imageLabel: 'Phonics mat', linkText: 'View resource' },
+        { href: 'resource-visual-timetable.html', heading: 'Back to School Teacher Toolkit', description: 'Free', imageLabel: 'Teacher toolkit', linkText: 'View resource' },
+        { href: 'resource-dentist-story.html', heading: 'Bonfire Night: Story to Help', description: 'Free', imageLabel: 'Bonfire Night story', linkText: 'View resource' },
+        { href: 'resource-phonics-mat.html', heading: 'Colourful Semantics Pack', description: 'Free with subscription', imageLabel: 'Colourful Semantics', linkText: 'View resource' },
       ] } },
       { component: 'wf-promo', props: {
         heading: 'Make your own version', body: 'Edit this resource or create your own in Widgit Online. Try it free for 21 days.',
@@ -1270,7 +1291,7 @@ function eventPage(slug: string, eyebrow: string, title: string, summary: string
       ] } },
       { component: 'wf-share', props: {} },
       { component: 'wf-cards', props: { heading: 'Other events', cols: 2, items: [
-        { href: 'event-webinar.html', heading: 'Webinar: Symbols in the mainstream classroom', description: 'Online · Free', linkText: 'View event' },
+        { href: 'event-webinar.html', heading: 'Introduction to Widgit Symbols and Widgit Online', description: 'Online · Free', linkText: 'View event' },
         { href: 'event-exhibition.html', heading: 'Widgit at the Education Show', description: 'In person · Exhibition', linkText: 'View event' },
       ] } },
       trialPromo(`cta-${slug}-promo`),
@@ -1383,7 +1404,7 @@ export const flows: Flow[] = [
       { href: 'index.html', targetId: 'cta-home-hero', label: 'Homepage', instruction: 'Jerome\'s daughter uses symbols at school. Click "Find support for your setting".' },
       { href: 'who-we-help.html', targetId: 'card-who-parents', label: 'Who we help', instruction: 'Click "Parents, Carers and Individuals".' },
       { href: 'parents-carers.html', targetId: 'cta-parents-resources', label: 'Parents and Carers', instruction: 'Click "Browse free resources".' },
-      { href: 'resources.html', targetId: 'card-res-visual-timetable', label: 'Resources', instruction: 'Click "Daily visual timetable".' },
+      { href: 'resources.html', targetId: 'card-res-visual-timetable', label: 'Resources', instruction: 'Click "Back to School Teacher Toolkit".' },
       { href: 'resource-visual-timetable.html', targetId: 'cta-resource-download', label: 'Resource page', instruction: 'Click "Log in to download". End of flow.' },
     ],
   },
@@ -1403,6 +1424,10 @@ export const flows: Flow[] = [
 export interface ChangelogEntry { date: string; type: 'Added' | 'Changed' | 'Removed' | 'Fixed'; text: string }
 
 export const changelog: ChangelogEntry[] = [
+  { date: '2026-11-11', type: 'Changed', text: 'Filled in copy, prices and figures from the current widgit.com.' },
+  { date: '2026-11-11', type: 'Changed', text: 'All six country pages now name the local partner and contact details.' },
+  { date: '2026-11-11', type: 'Changed', text: 'Case studies now use real Widgit success stories.' },
+  { date: '2026-11-11', type: 'Changed', text: 'Placeholder testimonials replaced with real quotes from widgit.com.' },
   { date: '2026-11-11', type: 'Added', text: 'Homepage hero now shows the symbol arc from the approved concept.' },
   { date: '2026-11-11', type: 'Added', text: 'Mission statement band below the homepage hero.' },
   { date: '2026-11-11', type: 'Added', text: 'Interactive product tour on the homepage, with numbered feature hotspots.' },
