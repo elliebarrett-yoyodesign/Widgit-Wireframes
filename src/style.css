@@ -26,3 +26,15 @@ main { flex: 1 0 auto; }
   from { opacity: 0; transform: scale(0.75); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* Reduced motion. motion.ts sets data-motion="reduce" from the OS setting or the footer toggle
+   (the toggle wins). This switches off CSS animations and transitions site-wide, including the
+   walkthrough ring's pulse. Components that move things in script check motionReduced() too. */
+html[data-motion="reduce"] *,
+html[data-motion="reduce"] *::before,
+html[data-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

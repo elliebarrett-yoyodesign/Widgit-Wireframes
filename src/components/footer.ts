@@ -1,10 +1,43 @@
 import { html } from 'lit'
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { Light } from '../base'
+import { MOTION_EVENT, motionReduced, setMotionReduced } from '../motion'
 import { footerColumns, footerTagline, footerLegal, footerLegalLinks, siteName } from '../config'
 
 @customElement('wf-site-footer')
 export class WfSiteFooter extends Light {
+  @state() private reduce = motionReduced()
+  private onMotion = () => { this.reduce = motionReduced() }
+
+  connectedCallback() {
+    super.connectedCallback()
+    this.reduce = motionReduced()
+    window.addEventListener(MOTION_EVENT, this.onMotion)
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener(MOTION_EVENT, this.onMotion)
+    super.disconnectedCallback()
+  }
+
+  /** Accessible on/off switch. Follows the OS reduced-motion setting until the viewer chooses. */
+  private renderMotionToggle() {
+    return html`
+      <div class="flex items-center gap-3">
+        <button type="button" role="switch" id="footer-reduce-motion" aria-checked=${this.reduce}
+          aria-describedby="footer-reduce-motion-hint"
+          @click=${() => setMotionReduced(!this.reduce)}
+          class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 ${this.reduce ? 'bg-gray-800' : 'bg-white'}">
+          <span class="sr-only">Reduce motion</span>
+          <span aria-hidden="true" class="inline-block h-4 w-4 rounded-full transition-transform ${this.reduce ? 'translate-x-[22px] bg-white' : 'translate-x-[2px] bg-gray-800'}"></span>
+        </button>
+        <span class="text-sm">
+          <span class="block font-medium text-gray-900" aria-hidden="true">Reduce motion</span>
+          <span id="footer-reduce-motion-hint" class="block text-xs text-gray-500">${this.reduce ? 'On: animations are switched off' : 'Off: animations are on'}</span>
+        </span>
+      </div>`
+  }
+
   render() {
     return html`
       <footer class="mt-20 border-t border-gray-200 bg-white">
@@ -34,8 +67,9 @@ export class WfSiteFooter extends Light {
               </div>
             `)}
           </div>
-          <div class="mt-12 border-t border-gray-200 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <p class="text-xs text-gray-400">&copy; ${new Date().getFullYear()} ${footerLegal}</p>
+          <div class="mt-12 border-t border-gray-200 pt-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+            <p class="text-xs text-gray-500">&copy; ${new Date().getFullYear()} ${footerLegal}</p>
+            ${this.renderMotionToggle()}
             <ul class="flex flex-wrap gap-x-5 gap-y-2">
               ${footerLegalLinks.map((l) => html`<li><a href=${l.href} class="text-xs text-gray-500 hover:text-gray-900">${l.label}</a></li>`)}
             </ul>

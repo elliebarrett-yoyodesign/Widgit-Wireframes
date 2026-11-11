@@ -29,7 +29,7 @@ export class WfPalettePage extends Light {
         <section>
           <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">Wireframe kit</p>
           <h1 class="mt-2 text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-900">Component List</h1>
-          <p class="mt-4 max-w-2xl text-base text-gray-600">All 18 components in the ${siteName} wireframe kit, with their key variants. Real pages use realistic, page-specific copy; this page is the one exception, for reference.</p>
+          <p class="mt-4 max-w-2xl text-base text-gray-600">All 20 components in the ${siteName} wireframe kit, with their key variants. Real pages use realistic, page-specific copy; this page is the one exception, for reference.</p>
         </section>
 
         <section>
@@ -70,7 +70,11 @@ export class WfPalettePage extends Light {
           html`<wf-page-header heading="Page header" subtitle="Minimal intro block for legal/utility pages, no image."></wf-page-header>`)}
 
         ${this.specimen(5, 'Text', 'wf-text',
-          html`<wf-text heading="Standalone rich text" .body=${['A heading plus one or more paragraphs of body copy, left- or center-aligned.']}></wf-text>`)}
+          html`<div class="space-y-10">
+            <wf-text heading="Standalone rich text" .body=${['A heading plus one or more paragraphs of body copy, left- or center-aligned.']}></wf-text>
+            <wf-text statement heading="Statement variant" .body=${['Large, centred line for a mission or key message. Used under the homepage hero.']}></wf-text>
+          </div>`,
+          { note: 'Add the statement prop for a large centred mission line.' })}
 
         ${this.specimen(6, 'Text & Media', 'wf-text-media',
           html`
@@ -151,7 +155,25 @@ export class WfPalettePage extends Light {
 
         ${this.specimen(18, 'Footer', 'wf-site-footer',
           html`<div class="[&_footer]:mt-0"><wf-site-footer></wf-site-footer></div>`,
-          { noPadding: true, note: 'Includes an email signup under the description, and the legal links in the bottom bar.' })}
+          { noPadding: true, note: 'Includes an email signup, the legal links and a Reduce motion switch in the bottom bar. The switch follows the device setting until the visitor chooses, and the choice is remembered on that browser.' })}
+
+        ${this.specimen(19, 'Symbol arc', 'wf-symbol-arc',
+          html`<div class="space-y-10">
+            <div class="pt-12 sm:pt-16"><wf-symbol-arc variant="hero" heading="Hero variant" cta-label="Primary action" cta-href="#"></wf-symbol-arc></div>
+            <wf-symbol-arc variant="band" heading="Band variant"></wf-symbol-arc>
+          </div>`,
+          { noFrame: true, note: 'From the approved concept. Full-bleed, with labelled symbol tiles on three arcs that turn slowly as you scroll. The hero variant replaces the homepage hero; the band variant closes a page. Tiles are decorative and hidden from screen readers. They stay still when Reduce motion is on.' })}
+
+        ${this.specimen(20, 'Product tour', 'wf-product-tour',
+          html`<wf-product-tour heading="Explore our products" intro="Select a number on the screen to find out about each feature." .tabs=${[
+            { key: 'a', label: 'Product one', screenshotLabel: 'Product screenshot', ctaLabel: 'Explore product one', ctaHref: '#',
+              hotspots: [{ x: 10, y: 40, title: 'Feature one', body: 'Caption for the first hotspot.' }, { x: 60, y: 30, title: 'Feature two', body: 'Caption for the second hotspot.' }],
+              features: [{ heading: 'Feature card', description: 'Short description.' }, { heading: 'Feature card', description: 'Short description.' }, { heading: 'Feature card', description: 'Short description.' }] },
+            { key: 'b', label: 'Product two', screenshotLabel: 'Second product screenshot',
+              hotspots: [{ x: 50, y: 50, title: 'Feature one', body: 'Caption for the hotspot.' }],
+              features: [{ heading: 'Feature card', description: 'Short description.' }, { heading: 'Feature card', description: 'Short description.' }, { heading: 'Feature card', description: 'Short description.' }] },
+          ]}></wf-product-tour>`,
+          { note: 'Tabs switch product (arrow keys work). Numbered hotspots are buttons, and their caption shows below the screenshot, not on hover. With one tab the tab list hides, for product pages.' })}
       </div>
     `
   }

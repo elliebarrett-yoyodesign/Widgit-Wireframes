@@ -1,9 +1,15 @@
 import './style.css'
+import { initMotion } from './motion'
+
+// Apply the reduced-motion preference before any component renders.
+initMotion()
 
 // Register every wf-* component once — available on every multi-page screen.
 import './components/header-nav'
 import './components/footer'
 import './components/homepage-hero'
+import './components/symbol-arc'
+import './components/product-tour'
 import './components/standard-hero'
 import './components/page-header'
 import './components/text'

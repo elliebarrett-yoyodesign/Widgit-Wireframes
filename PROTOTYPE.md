@@ -14,6 +14,16 @@ The **Prototype** button (bottom right of every page) opens Core pages, User flo
 - Region switcher in the header routes to country landing pages.
 - Who we help leads the main navigation.
 
+## Concept elements added (11 Nov 2026)
+
+Taken from the client-approved concept at widgit.yoyoqa.site. The concept's navigation was not copied, because the nav has moved on since.
+
+- **Symbol arc hero** (`wf-symbol-arc`, hero variant): big statement heading, one CTA, labelled symbol tiles on three arcs that turn slightly on scroll. Replaces the homepage hero.
+- **Mission statement** (`wf-text` with `statement`): "We believe in empowering individuals", under the hero.
+- **Product tour** (`wf-product-tour`): tabs for Widgit Online, InPrint 4 and Widgit Health, a screenshot with numbered feature hotspots, and three feature cards per product. On the homepage, plus single-product versions on the Widgit Online and InPrint 4 pages.
+- **Closing symbol band** (`wf-symbol-arc`, band variant) near the end of the homepage.
+- **Reduce motion switch** in the footer. It follows the device's reduced-motion setting until the visitor chooses, remembers the choice in that browser, and switches off every animation and transition site-wide, including the symbol arcs.
+
 ## Pages
 
 | Template | Type | Route |
@@ -68,6 +78,11 @@ The **Prototype** button (bottom right of every page) opens Core pages, User flo
 - Should the Middle East and Southeast Asia get their own landing pages, or stay on International schools?
 - Testimonials are placeholders and need real, approved quotes.
 
+- Widgit Health appears in the concept's product tour but not in the sitemap. Is it a real or planned product, and does it need its own page?
+- The concept describes clinical symbol sets as "NHS-approved". Confirm that claim before it goes into copy.
+- The symbol count ("15,000+" in the concept) is shown in square brackets until Widgit confirms it.
+- The symbol-arc motion needs a design decision: how far it turns, and whether it moves at all on phones.
+
 ## Kit changes made in this build
 
 - Header: Shop and primary CTA now come from config (they were hardcoded from a previous project). Added a utility bar with region switcher, Contact, My Shop Account and Log in, a search link, and two-column panels for menus with more than five items.
@@ -78,6 +93,19 @@ The **Prototype** button (bottom right of every page) opens Core pages, User flo
 - Vite builds every root HTML file automatically.
 
 ## Change log
+
+### 2026-11-11
+- Added: Homepage hero now shows the symbol arc from the approved concept.
+- Added: Mission statement band below the homepage hero.
+- Added: Interactive product tour on the homepage, with numbered feature hotspots.
+- Added: Single-product tours on the Widgit Online and InPrint 4 pages.
+- Added: Closing symbol band near the end of the homepage.
+- Added: Reduce motion switch in the footer, which also follows the device setting.
+- Removed: Homepage "Our products" cards and Widgit Online text block, replaced by the product tour.
+- Fixed: Component List hero no longer covers its own heading.
+- Fixed: Footer Subscribe button no longer spills out on narrow screens.
+- Fixed: Who we help menu no longer has a gap beside Education.
+- Fixed: Widgit Apps features now sit in one row.
 
 ### 2026-11-10
 - Added: First build from the revised sitemap, personas and audience priorities.

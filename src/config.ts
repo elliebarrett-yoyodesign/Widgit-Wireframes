@@ -224,6 +224,7 @@ function sectorPage(o: {
 function productPage(o: {
   slug: string; name: string; eyebrow: string; intro: string; what: string[]; features: { heading: string; description: string }[]
   who: string[]; faqs: { heading: string; body: string }[]; primary: { label: string; href: string }; extraBlocks?: Block[]
+  tour?: { hotspots: { x: number; y: number; title: string; body: string }[]; screenshotLabel: string }
 }): Page {
   return {
     hero: { component: 'wf-standard-hero', props: {
@@ -233,7 +234,10 @@ function productPage(o: {
     } },
     blocks: [
       { component: 'wf-text-media', props: { heading: `What is ${o.name}?`, body: o.what, side: 'left', mediaLabel: `${o.name} in use`, ctaLabel: '' } },
-      { component: 'wf-cards', anchorId: 'features', props: { heading: 'Key features', cols: o.features.length === 4 ? 4 : 3, items: o.features.map((f) => ({ ...f, imageLabel: f.heading })) } },
+      o.tour
+        ? { component: 'wf-product-tour', anchorId: 'features', props: { heading: 'Take a look around', intro: 'Select a number on the screen to find out about each feature.',
+            tabs: [{ key: o.slug, label: o.name, screenshotLabel: o.tour.screenshotLabel, hotspots: o.tour.hotspots, features: o.features }] } }
+        : { component: 'wf-cards', anchorId: 'features', props: { heading: 'Key features', cols: o.features.length === 4 ? 4 : 3, items: o.features.map((f) => ({ ...f, imageLabel: f.heading })) } },
       ...(o.extraBlocks || []),
       { component: 'wf-media', props: { type: 'video', label: `${o.name} 2-minute overview video` } },
       { component: 'wf-text-media', props: { heading: 'Who uses it', body: o.who, side: 'right', mediaLabel: 'Teacher creating a resource' } },
@@ -304,34 +308,70 @@ function legalPage(heading: string, subtitle: string, slug: string, sections: { 
 export const pages: Record<string, Page> = {
   // ===================== HOMEPAGE =====================
   homepage: {
-    hero: { component: 'wf-homepage-hero', props: {
-      heading: 'Symbols that help everyone understand',
-      body: 'Widgit Symbols make information clearer for children, adults and communities. Find the tools and support that fit your setting.',
+    // Hero, mission line, product tour and closing symbol band follow the client-approved concept
+    // (widgit.yoyoqa.site). Audience routing stays high up because UK education is the top priority.
+    hero: { component: 'wf-symbol-arc', props: {
+      heading: 'Remove barriers with symbols',
       ctaLabel: 'Find support for your setting', ctaHref: 'who-we-help.html', ctaId: 'cta-home-hero',
     } },
     blocks: [
-      { component: 'wf-statistics', props: { heading: 'Widgit at a glance (figures to be confirmed)', items: [
-        { value: '[00,000+]', label: 'Widgit Symbols' },
-        { value: '[0,000+]', label: 'Free and premium resources' },
-        { value: '[00+]', label: 'Countries using Widgit' },
-        { value: '[00,000+]', label: 'Schools and organisations' },
-      ] } },
+      { component: 'wf-text', props: { statement: true, heading: 'We believe in empowering individuals',
+        body: ['Our products use symbols to support text, helping people read, understand and communicate with ease.'] } },
       { component: 'wf-cards', props: { heading: 'Who we help', cols: 4, items: [
         { href: 'education.html', id: 'card-home-education', heading: 'Education', description: 'Inclusive classrooms where every pupil can follow, join in and succeed.', imageLabel: 'Classroom', linkText: 'Symbols for schools' },
         { href: 'health-social-care.html', heading: 'Health and Social Care', description: 'Clearer appointments, care plans and patient information.', imageLabel: 'Clinic', linkText: 'Symbols for health' },
         { href: 'government-local-authorities.html', heading: 'Government and Local Authorities', description: 'Accessible public information that everyone can act on.', imageLabel: 'Council office', linkText: 'Symbols for the public sector' },
         { href: 'parents-carers.html', heading: 'Parents and Carers', description: 'Routines, visits and conversations made easier at home.', imageLabel: 'Family at home', linkText: 'Support for families' },
       ] } },
-      { component: 'wf-text-media', props: {
-        heading: 'Create symbol resources in minutes with Widgit Online',
-        body: ['Type a sentence and Widgit Online adds symbols as you go. Build visual timetables, social stories and worksheets, then print or share them.', 'Thousands of ready-made templates mean you rarely start from a blank page.'],
-        side: 'left', mediaLabel: 'Widgit Online editor', ctaLabel: 'Start free trial', ctaHref: 'free-trial.html', secondaryLabel: 'Explore Widgit Online', secondaryHref: 'widgit-online.html',
+      { component: 'wf-product-tour', anchorId: 'products', props: {
+        heading: 'Explore our products',
+        intro: 'Choose a product to see how it works. Select a number on the screen to find out about each feature.',
+        linkLabel: 'See all products', linkHref: 'products.html',
+        tabs: [
+          { key: 'online', label: 'Widgit Online', screenshotLabel: 'Widgit Online dashboard screenshot',
+            hotspots: [
+              { x: 5, y: 40, title: 'Personalised sidebar', body: 'Move between files, layouts and resources from your own sidebar.' },
+              { x: 38, y: 10, title: 'Search', body: 'Find files, layouts or resources in seconds.' },
+              { x: 42, y: 52, title: 'Widgit Prompt', body: 'Describe what you need and create new symbol resources in seconds.' },
+              { x: 88, y: 82, title: 'Inspiration Bank', body: 'Stuck for ideas? Browse real examples to find the right starting point.' },
+            ],
+            features: [
+              { heading: 'Symbols as you type', description: 'Symbols appear above your text automatically.' },
+              { heading: 'Ready-made templates', description: 'Timetables, social stories, worksheets and more.' },
+              { heading: 'Share with colleagues', description: 'Shared folders for teams, schools and trusts.' },
+            ],
+            ctaLabel: 'Explore Widgit Online', ctaHref: 'widgit-online.html', ctaId: 'cta-home-tour-online' },
+          { key: 'inprint', label: 'Widgit InPrint 4', screenshotLabel: 'InPrint 4 document editor screenshot',
+            hotspots: [
+              { x: 12, y: 45, title: 'Symbol library', body: 'Drag symbols straight into your document, filtered by category or keyword.' },
+              { x: 55, y: 35, title: 'Document editor', body: 'Symbols follow your text as you type, ready for print.' },
+              { x: 85, y: 20, title: 'Templates', body: 'Start from worksheets, schedules or communication boards.' },
+            ],
+            features: [
+              { heading: '[15,000+] Widgit symbols', description: 'Drag and drop symbols, filtered by category or keyword.' },
+              { heading: 'Symbols follow your text', description: 'Ideal for printed resources and visual schedules.' },
+              { heading: 'Hundreds of smart templates', description: 'Worksheets, schedules and boards with symbols built in.' },
+            ],
+            ctaLabel: 'Explore InPrint 4', ctaHref: 'inprint-4.html', ctaId: 'cta-home-tour-inprint' },
+          { key: 'health', label: 'Widgit Health', screenshotLabel: 'Widgit Health screenshot (product to be confirmed)',
+            hotspots: [
+              { x: 20, y: 30, title: 'Clinical symbols', body: 'Symbol sets designed for patient communication.' },
+              { x: 60, y: 50, title: 'Patient profiles', body: 'Keep a communication profile for each patient so the whole care team uses the same symbols.' },
+              { x: 85, y: 75, title: 'Easy Read', body: 'Create easy-read versions of clinical documents.' },
+            ],
+            features: [
+              { heading: 'Clinical symbol sets', description: 'For patient communication in health and care settings. Approvals to be confirmed.' },
+              { heading: 'Personalised communication', description: 'Consistent, familiar symbols for every patient.' },
+              { heading: 'One-click Easy Read', description: 'Easy-read versions of clinical documents.' },
+            ],
+            ctaLabel: 'Symbols in health and care', ctaHref: 'health-social-care.html', ctaId: 'cta-home-tour-health' },
+        ],
       } },
-      { component: 'wf-cards', props: { heading: 'Our products', cols: 4, items: [
-        { href: 'widgit-online.html', heading: 'Widgit Online', description: 'Browser-based symbol resource maker.', imageLabel: 'Widgit Online', linkText: 'Explore Widgit Online' },
-        { href: 'inprint-4.html', heading: 'InPrint 4', description: 'Professional printed symbol materials.', imageLabel: 'InPrint 4', linkText: 'Explore InPrint 4' },
-        { href: 'symwriter.html', heading: 'Symwriter', description: 'Write with symbols as you type.', imageLabel: 'Symwriter', linkText: 'Explore Symwriter' },
-        { href: 'widgit-apps.html', heading: 'Widgit Apps', description: 'Symbols on tablets and phones.', imageLabel: 'Widgit Apps', linkText: 'Explore the apps' },
+      { component: 'wf-statistics', props: { heading: 'Widgit at a glance (figures to be confirmed)', items: [
+        { value: '[00,000+]', label: 'Widgit Symbols' },
+        { value: '[0,000+]', label: 'Free and premium resources' },
+        { value: '[00+]', label: 'Countries using Widgit' },
+        { value: '[00,000+]', label: 'Schools and organisations' },
       ] } },
       { component: 'wf-promo', props: {
         heading: 'Widgit Symbols: a visual language for everyone',
@@ -350,6 +390,7 @@ export const pages: Record<string, Page> = {
         { href: 'events.html', heading: 'Join an event', description: 'Webinars, study days and exhibitions.', linkText: 'See events' },
       ] } },
       { component: 'wf-logos', props: { heading: 'Trusted by schools, trusts and organisations', names: ['Customer logo', 'Customer logo', 'Customer logo', 'Customer logo', 'Customer logo'] } },
+      { component: 'wf-symbol-arc', props: { heading: 'One visual language for everyone' } },
       trialPromo('cta-home-promo'),
     ],
   },
@@ -576,6 +617,12 @@ export const pages: Record<string, Page> = {
       { heading: 'Can my whole school share resources?', body: 'Yes. School and trust plans include shared folders and central user management.' },
     ],
     primary: { label: 'Start free trial', href: 'free-trial.html' },
+    tour: { screenshotLabel: 'Widgit Online dashboard screenshot', hotspots: [
+      { x: 5, y: 40, title: 'Personalised sidebar', body: 'Move between files, layouts and resources from your own sidebar.' },
+      { x: 38, y: 10, title: 'Search', body: 'Find files, layouts or resources in seconds.' },
+      { x: 42, y: 52, title: 'Widgit Prompt', body: 'Describe what you need and create new symbol resources in seconds.' },
+      { x: 88, y: 82, title: 'Inspiration Bank', body: 'Browse real examples to find the right starting point.' },
+    ] },
   }),
 
   'inprint-4': productPage({
@@ -593,6 +640,11 @@ export const pages: Record<string, Page> = {
       { heading: 'Can I upgrade from InPrint 3?', body: 'Upgrade options to be confirmed with Widgit.' },
     ],
     primary: { label: 'Buy InPrint 4', href: 'shop.html' },
+    tour: { screenshotLabel: 'InPrint 4 document editor screenshot', hotspots: [
+      { x: 12, y: 45, title: 'Symbol library', body: 'Drag symbols straight into your document, filtered by category or keyword.' },
+      { x: 55, y: 35, title: 'Document editor', body: 'Place text, symbols and images anywhere on the page.' },
+      { x: 85, y: 20, title: 'Templates', body: 'Start from signs, books, worksheets and communication boards.' },
+    ] },
   }),
 
   symwriter: productPage({
@@ -1351,6 +1403,17 @@ export const flows: Flow[] = [
 export interface ChangelogEntry { date: string; type: 'Added' | 'Changed' | 'Removed' | 'Fixed'; text: string }
 
 export const changelog: ChangelogEntry[] = [
+  { date: '2026-11-11', type: 'Added', text: 'Homepage hero now shows the symbol arc from the approved concept.' },
+  { date: '2026-11-11', type: 'Added', text: 'Mission statement band below the homepage hero.' },
+  { date: '2026-11-11', type: 'Added', text: 'Interactive product tour on the homepage, with numbered feature hotspots.' },
+  { date: '2026-11-11', type: 'Added', text: 'Single-product tours on the Widgit Online and InPrint 4 pages.' },
+  { date: '2026-11-11', type: 'Added', text: 'Closing symbol band near the end of the homepage.' },
+  { date: '2026-11-11', type: 'Added', text: 'Reduce motion switch in the footer, which also follows the device setting.' },
+  { date: '2026-11-11', type: 'Removed', text: 'Homepage "Our products" cards and Widgit Online text block, replaced by the product tour.' },
+  { date: '2026-11-11', type: 'Fixed', text: 'Component List hero no longer covers its own heading.' },
+  { date: '2026-11-11', type: 'Fixed', text: 'Footer Subscribe button no longer spills out on narrow screens.' },
+  { date: '2026-11-11', type: 'Fixed', text: 'Who we help menu no longer has a gap beside Education.' },
+  { date: '2026-11-11', type: 'Fixed', text: 'Widgit Apps features now sit in one row.' },
   { date: '2026-11-10', type: 'Added', text: 'First build from the revised sitemap, personas and audience priorities.' },
   { date: '2026-11-10', type: 'Added', text: 'Region switcher in the header, routing to country landing pages.' },
   { date: '2026-11-10', type: 'Added', text: 'Contact form routes enquiries by topic, with deep links from other pages.' },

@@ -21,6 +21,9 @@ export class WfPageBody extends Light {
           cta-label=${p.ctaLabel || ''} cta-href=${p.ctaHref || ''} cta-id=${p.ctaId || ''}
           secondary-label=${p.secondaryLabel || ''} secondary-href=${p.secondaryHref || '#'}
           media-label=${p.mediaLabel || 'Section image'} .breadcrumb=${p.breadcrumb || []}></wf-standard-hero>`
+      case 'wf-symbol-arc':
+        return html`<wf-symbol-arc variant="hero" heading=${p.heading || ''} body=${p.body || ''}
+          cta-label=${p.ctaLabel || ''} cta-href=${p.ctaHref || '#'} cta-id=${p.ctaId || ''}></wf-symbol-arc>`
       case 'wf-page-header':
         return html`<wf-page-header heading=${p.heading} subtitle=${p.subtitle || ''} .breadcrumb=${p.breadcrumb || []}></wf-page-header>`
       default:
@@ -32,7 +35,13 @@ export class WfPageBody extends Light {
     const p = block.props || {}
     switch (block.component) {
       case 'wf-text':
-        return html`<wf-text heading=${p.heading || ''} .body=${p.body || []} align=${p.align || 'left'} ?centered=${!!p.centered}></wf-text>`
+        return html`<wf-text heading=${p.heading || ''} .body=${p.body || []} align=${p.align || 'left'} ?centered=${!!p.centered} ?statement=${!!p.statement}></wf-text>`
+      case 'wf-symbol-arc':
+        return html`<wf-symbol-arc variant="band" heading=${p.heading || ''} body=${p.body || ''}
+          cta-label=${p.ctaLabel || ''} cta-href=${p.ctaHref || '#'} cta-id=${p.ctaId || ''}></wf-symbol-arc>`
+      case 'wf-product-tour':
+        return html`<wf-product-tour heading=${p.heading || ''} intro=${p.intro || ''} .tabs=${p.tabs || []}
+          link-label=${p.linkLabel || ''} link-href=${p.linkHref || ''}></wf-product-tour>`
       case 'wf-text-media':
         return html`<wf-text-media heading=${p.heading || ''} .body=${p.body || []} side=${p.side || 'left'}
           media-label=${p.mediaLabel || 'Section image'}

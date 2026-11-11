@@ -18,11 +18,22 @@ export class WfText extends Light {
    *  as broken, not intentional — there's no real case for that combination, so `align="center"`
    *  centers the container too unless this is explicitly set. */
   @property({ type: Boolean }) centered = false
+  /** Large centred statement (e.g. a mission line): bigger heading and body, always centred. */
+  @property({ type: Boolean }) statement = false
 
   render() {
     // A center-aligned paragraph inside a container that isn't itself centered on the page looks
     // like a layout bug (lines centered within a box that's stuck on the left) — so align=center
     // centers the container by default too, unless `centered` was explicitly passed.
+    if (this.statement) {
+      return html`
+        <section class="mx-auto max-w-3xl text-center">
+          ${this.heading ? html`<h2 class="text-3xl sm:text-5xl font-semibold tracking-tight text-gray-900 text-balance">${this.heading}</h2>` : ''}
+          <div class="mt-5 space-y-4">
+            ${this.body.map((p) => html`<p class="text-lg sm:text-xl text-gray-600">${p}</p>`)}
+          </div>
+        </section>`
+    }
     const isCentered = this.centered || this.align === 'center'
     const containerClass = isCentered ? 'mx-auto max-w-3xl' : 'max-w-3xl'
     const textAlignClass = this.align === 'center' ? 'text-center' : ''
