@@ -73,7 +73,7 @@ export class WfHeaderNav extends Light {
     const children = item.children || []
     const wide = children.length > 5
     const card = (child: (typeof children)[number]) => html`
-      <div class="py-0.5">
+      <div class="py-0.5 break-inside-avoid">
         <a role="menuitem" href=${child.href} class="block rounded-md px-3 py-2.5 hover:bg-gray-50">
           <span class="block text-sm font-semibold text-gray-900">${child.label}</span>
           ${child.description ? html`<span class="block mt-0.5 text-xs text-gray-500">${child.description}</span>` : ''}
@@ -89,7 +89,7 @@ export class WfHeaderNav extends Light {
     }
     // Mega-style panel: two columns of links for sections with many children.
     return html`
-      <div class="w-[40rem] max-w-[90vw] rounded-xl border border-gray-200 bg-white shadow-lg p-2 grid grid-cols-2 gap-x-2">
+      <div class="w-[40rem] max-w-[90vw] rounded-xl border border-gray-200 bg-white shadow-lg p-2 columns-2 gap-x-2">
         ${children.map(card)}
       </div>`
   }
