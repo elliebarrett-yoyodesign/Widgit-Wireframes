@@ -233,7 +233,7 @@ function productPage(o: {
     } },
     blocks: [
       { component: 'wf-text-media', props: { heading: `What is ${o.name}?`, body: o.what, side: 'left', mediaLabel: `${o.name} in use`, ctaLabel: '' } },
-      { component: 'wf-cards', anchorId: 'features', props: { heading: 'Key features', cols: 3, items: o.features.map((f) => ({ ...f, imageLabel: f.heading })) } },
+      { component: 'wf-cards', anchorId: 'features', props: { heading: 'Key features', cols: o.features.length === 4 ? 4 : 3, items: o.features.map((f) => ({ ...f, imageLabel: f.heading })) } },
       ...(o.extraBlocks || []),
       { component: 'wf-media', props: { type: 'video', label: `${o.name} 2-minute overview video` } },
       { component: 'wf-text-media', props: { heading: 'Who uses it', body: o.who, side: 'right', mediaLabel: 'Teacher creating a resource' } },
@@ -637,8 +637,8 @@ export const pages: Record<string, Page> = {
       { heading: 'Widgit Writer', description: 'Symbol-supported writing on a tablet.' },
       { heading: 'Widgit Go', description: 'Communication and learning activities on the go.' },
       { heading: 'Symbol2Write', description: 'Build sentences from symbols.' },
+      { heading: 'Widgit Vocab', description: 'Build and practise topic vocabulary with symbols.' },
     ],
-    extraBlocks: [{ component: 'wf-cards', props: { cols: 1, items: [{ heading: 'Widgit Vocab', description: 'Build and practise topic vocabulary with symbols.', imageLabel: 'Widgit Vocab' }] } }],
     who: ['Individuals, families and schools using tablets for communication and learning.'],
     faqs: [
       { heading: 'Which devices are supported?', body: 'Device support for each app to be confirmed with Widgit.' },
