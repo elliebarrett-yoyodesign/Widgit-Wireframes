@@ -59,12 +59,12 @@ export class WfPalettePage extends Light {
                it's full-bleed by design and a border would contradict that. -->
           <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Homepage hero: wf-homepage-hero</h2>
           <p class="mb-4 text-sm text-gray-500">Full-bleed by design: it intentionally breaks out to the true viewport edges here too, not just on the homepage.</p>
-          <wf-homepage-hero heading="Full-bleed homepage hero" body="Centred heading, short body, a single primary CTA, dark legibility overlay." cta-label="Primary action" cta-href="#"></wf-homepage-hero>
+          <div class="pt-12 sm:pt-16"><wf-homepage-hero heading="Full-bleed homepage hero" body="Centred heading, short body, a single primary CTA, dark legibility overlay." cta-label="Primary action" cta-href="#"></wf-homepage-hero></div>
         </div>
 
         ${this.specimen(3, 'Standard hero', 'wf-standard-hero',
           html`<wf-standard-hero eyebrow="Section" heading="Standard hero (stacked)" body="Text first, full-width image below. Used on every non-homepage page. Optional secondary action next to the primary." cta-label="Primary action" cta-href="#" secondary-label="Secondary action" secondary-href="#" .breadcrumb=${[{ label: 'Home', href: 'index.html' }, { label: 'Section', href: '#' }, { label: 'Standard hero', href: '#' }]}></wf-standard-hero>`,
-          { note: 'Breadcrumb is optional — shown here to confirm it renders; omit it on pages that don\'t need one (e.g. one level deep from Home).' })}
+          { note: 'Breadcrumb is optional. It\'s shown here to confirm it renders. Leave it off pages that don\'t need one, such as those one level below Home.' })}
 
         ${this.specimen(4, 'Page header', 'wf-page-header',
           html`<wf-page-header heading="Page header" subtitle="Minimal intro block for legal/utility pages, no image."></wf-page-header>`)}
@@ -75,7 +75,7 @@ export class WfPalettePage extends Light {
         ${this.specimen(6, 'Text & Media', 'wf-text-media',
           html`
             <div class="space-y-8">
-              <wf-text-media heading="Text left, media right" side="left" .body=${['Alternate the side prop on successive instances down a page. CTA is always a button (or a primary + secondary pair) — never a bare text link.']} cta-label="Primary action" cta-href="#" secondary-label="Secondary action" secondary-href="#"></wf-text-media>
+              <wf-text-media heading="Text left, media right" side="left" .body=${['Alternate the side prop on successive instances down a page. CTA is always a button (or a primary and secondary pair), never a bare text link.']} cta-label="Primary action" cta-href="#" secondary-label="Secondary action" secondary-href="#"></wf-text-media>
               <wf-text-media heading="Text right, media left" side="right" .body=${['This is the flipped variant, shown here with a single primary action instead of a pair.']} cta-label="Primary action" cta-href="#"></wf-text-media>
             </div>`)}
 
@@ -95,17 +95,17 @@ export class WfPalettePage extends Light {
 
         ${this.specimen(9, 'Logos', 'wf-logos',
           html`<wf-logos heading="Partner logos" .names=${['Logo one', 'Logo two', 'Logo three', 'Logo four', 'Logo five']}></wf-logos>`,
-          { note: 'Always a text label in a box, never an image-icon placeholder — a partner name is legible; a generic image icon tells the reviewer nothing about which partner it stands for.' })}
+          { note: 'Always a text label in a box, never an image icon. A name is readable, but a generic icon tells the reviewer nothing about which partner it stands for.' })}
 
         ${this.specimen(10, 'Statistics', 'wf-statistics',
           html`<wf-statistics heading="Key figures" .items=${[{ value: '123', label: 'Metric one' }, { value: '45%', label: 'Metric two' }, { value: '6,789', label: 'Metric three' }]}></wf-statistics>`,
-          { note: 'The eyebrow heading sits above the bordered stat card, not inside it — the card is just the numbers.' })}
+          { note: 'The eyebrow heading sits above the bordered stat card, not inside it. The card holds only the numbers.' })}
 
         ${this.specimen(11, 'Cards', 'wf-cards',
           html`
             <div class="space-y-10">
               <div>
-                <p class="mb-2 text-xs text-gray-500">With a real destination page — fixed cols, link affordance shown</p>
+                <p class="mb-2 text-xs text-gray-500">With a real destination page: fixed columns, link shown</p>
                 <wf-cards heading="Grid fills to the item count, no Load more" .items=${[
                   { href: '#', heading: 'Card one', description: 'Card description text.', imageLabel: 'Card image', linkText: 'View' },
                   { href: '#', heading: 'Card two', description: 'Card description text.', imageLabel: 'Card image', linkText: 'View' },
@@ -113,7 +113,7 @@ export class WfPalettePage extends Light {
                 ]}></wf-cards>
               </div>
               <div>
-                <p class="mb-2 text-xs text-gray-500">Display-only, no destination page — href omitted, no link affordance</p>
+                <p class="mb-2 text-xs text-gray-500">Display only, no destination page: no link shown</p>
                 <wf-cards .cols=${2} .items=${[
                   { heading: 'Person one', description: 'Role or title.', imageLabel: 'Card image' },
                   { heading: 'Person two', description: 'Role or title.', imageLabel: 'Card image' },
@@ -135,7 +135,7 @@ export class WfPalettePage extends Light {
 
         <div>
           <h2 class="text-2xl font-semibold text-gray-900 mb-4">14. Signup form: wf-signup-form</h2>
-          <p class="mb-4 text-sm text-gray-500">Full-bleed banner by design — no border frame, same reasoning as the homepage hero above.</p>
+          <p class="mb-4 text-sm text-gray-500">Full-bleed banner by design, so no border frame, same as the homepage hero above.</p>
           <wf-signup-form></wf-signup-form>
         </div>
 
@@ -150,8 +150,8 @@ export class WfPalettePage extends Light {
           { note: 'Facebook, LinkedIn, Email and Copy link all show an icon alongside the label.' })}
 
         ${this.specimen(18, 'Footer', 'wf-site-footer',
-          html`<wf-site-footer></wf-site-footer>`,
-          { noPadding: true, note: 'Includes an email signup under the description and a legal/Privacy Policy link in the bottom bar.' })}
+          html`<div class="[&_footer]:mt-0"><wf-site-footer></wf-site-footer></div>`,
+          { noPadding: true, note: 'Includes an email signup under the description, and the legal links in the bottom bar.' })}
       </div>
     `
   }
