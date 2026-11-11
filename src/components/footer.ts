@@ -10,16 +10,16 @@ export class WfSiteFooter extends Light {
       <footer class="mt-20 border-t border-gray-200 bg-white">
         <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-14">
           <div class="grid gap-10 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
-            <div>
+            <div class="min-w-0">
               <a href="index.html" class="text-base font-semibold text-gray-900">${siteName}</a>
               <p class="mt-3 max-w-xs text-sm text-gray-500">${footerTagline}</p>
               <form class="mt-5 max-w-sm" @submit=${(e: Event) => e.preventDefault()}>
                 <label for="footer-subscribe" class="text-xs font-medium text-gray-700">Subscribe for updates</label>
                 <div class="mt-1.5 flex gap-2">
                   <input id="footer-subscribe" type="email" placeholder="you@example.com" required
-                    class="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900" />
+                    class="w-full min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900" />
                   <button type="submit"
-                    class="rounded-lg bg-gray-800 px-3.5 py-2 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">
+                    class="shrink-0 rounded-lg bg-gray-800 px-3.5 py-2 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">
                     Subscribe
                   </button>
                 </div>
