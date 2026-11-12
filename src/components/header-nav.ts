@@ -118,16 +118,16 @@ export class WfHeaderNav extends Light {
           </div>
         </div>
 
-        <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
+        <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 xl:gap-6">
           <a href="index.html" class="text-base font-semibold text-gray-900 shrink-0">${siteName}</a>
 
-          <nav aria-label="Primary" class="hidden lg:flex items-center gap-1 flex-1 justify-center relative">
+          <nav aria-label="Primary" class="hidden lg:flex items-center gap-0.5 xl:gap-1 flex-1 justify-center relative">
             ${primaryNav.map((item) => {
               const isActive = this.active === item.slug
               if (!item.children?.length) {
                 return html`
                   <a href=${item.href}
-                     class="px-3 py-2 text-sm font-medium rounded-md ${isActive ? 'text-gray-900 bg-gray-100' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'}">
+                     class="whitespace-nowrap px-2 xl:px-3 py-2 text-sm font-medium rounded-md ${isActive ? 'text-gray-900 bg-gray-100' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'}">
                     ${item.label}
                   </a>`
               }
@@ -135,7 +135,7 @@ export class WfHeaderNav extends Light {
               const trigger = html`
                 <button type="button" aria-haspopup="menu" aria-expanded=${open}
                   @click=${(e: MouseEvent) => this.handleTriggerClick(e, item.label)}
-                  class="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md ${isActive ? 'text-gray-900 bg-gray-100' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'}">
+                  class="flex items-center gap-1 whitespace-nowrap px-2 xl:px-3 py-2 text-sm font-medium rounded-md ${isActive ? 'text-gray-900 bg-gray-100' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'}">
                   ${item.label}
                   ${chevronIcon(open)}
                 </button>`
@@ -143,7 +143,7 @@ export class WfHeaderNav extends Light {
             })}
           </nav>
 
-          <div class="hidden lg:flex items-center gap-3 shrink-0">
+          <div class="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
             <a href="search.html" aria-label="Search the site" class="p-2 rounded-lg text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
             </a>

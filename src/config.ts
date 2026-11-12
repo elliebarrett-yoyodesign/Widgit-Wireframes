@@ -83,6 +83,14 @@ export const primaryNav: NavItem[] = [
   },
   { slug: 'resources', label: 'Resources', href: 'resources.html' },
   {
+    slug: 'about', label: 'About', href: 'about.html',
+    children: [
+      { label: 'About Widgit', href: 'about.html', description: 'Who we are and what we stand for.' },
+      { label: 'About us', href: 'about-us.html', description: 'Our mission, values, team and B Corp commitment.' },
+      { label: 'News', href: 'news.html', description: 'Company news, staff spotlights and community stories.' },
+    ],
+  },
+  {
     slug: 'support', label: 'Support', href: 'support.html',
     children: [
       { label: 'Support', href: 'support.html', description: 'Help, guidance and answers in one place.' },
@@ -209,6 +217,13 @@ const Q = {
   tfl: rq('The people who have used it have found it an easy document to follow and it clearly shows what is expected of them, and of us.', 'Charlotte Eade', 'HR Project Manager, Transport for London'),
   signage: rq('The aim of including symbols on the directional signage was to provide simple, identifiable objects that all members of the community would be able to recognise.', 'Mark Owers', 'Chelmsford Borough Council'),
   point: rq('Widgit\'s Point tool meets the requirement for making websites more accessible to people with cognitive difficulties.', 'Joe Chidzik', 'AbilityNet'),
+}
+
+/** Titles of the built news articles, for related-article cards. */
+const NEWS_TITLES: Record<string, { title: string; date: string; category: string }> = {
+  'news-bcorp': { title: 'A balance of purpose and profit: Widgit\'s B Corp journey', date: 'October 2025', category: 'B Corp' },
+  'news-staff-spotlight-sophie': { title: 'Staff spotlight: Sophie Clarke, Signage and Symbol Design Support', date: 'June 2026', category: 'Staff spotlight' },
+  'news-widgit-wilding': { title: 'Widgit Wilding Part IV: Gardening at Painting\'s Plantation', date: 'June 2025', category: 'Widgit Wilding' },
 }
 
 // --- Sector page template (Who we help children) ---
@@ -1182,6 +1197,137 @@ export const pages: Record<string, Page> = {
   canada: countryPage({ slug: 'canada', country: 'Canada', partner: 'Bridges', address: '2123 McCowan Road, Scarborough, Ontario, M1S 3Y6', email: 'info@bridges-canada.com', phone: 'Toll free 1-800-353-1107, or 905-542-7232', web: 'www.bridges-canada.com', language: 'English and French', products: ['InPrint 4 (English and French)', 'Widgit Online (English and French)', 'SymWriter 2 (English and French)', 'First Keys 3'] }),
   australia: countryPage({ slug: 'australia', country: 'Australia', partner: 'Spectronics', address: 'PO Box 88, Rochedale, Queensland 4123, Australia', email: 'mail@spectronics.com.au', phone: '(+61) 7 3808 6833', web: 'www.spectronics.com.au', language: 'English, covering Australia and New Zealand', products: ['Widgit Online', 'SymWriter 2', 'InPrint 3'] }),
 
+
+  // ===================== ABOUT (copy from widgit.com/about-widgit) =====================
+  about: {
+    hero: { component: 'wf-standard-hero', props: {
+      eyebrow: 'About Widgit', heading: 'Symbols are our world',
+      body: 'We are Widgit, a pioneering software company with a passion for symbol-based communication. We help people of all ages express themselves independently and understand the world around them.',
+      ctaLabel: 'About us', ctaHref: 'about-us.html', ctaId: 'cta-about-hero', secondaryLabel: 'Latest news', secondaryHref: 'news.html',
+      mediaLabel: 'The Widgit team', breadcrumb: bc({ label: 'About', href: 'about.html' }),
+    } },
+    blocks: [
+      { component: 'wf-statistics', props: { heading: 'Widgit at a glance', items: [
+        { value: '40+', label: 'Years of Widgit Symbols' },
+        { value: '100,000+', label: 'Widgit Symbols' },
+        { value: '10,000+', label: 'Schools using Widgit Symbols' },
+        { value: '117.8', label: 'B Impact score as a certified B Corp' },
+      ] } },
+      { component: 'wf-text-media', props: {
+        heading: 'What we do',
+        body: ['We believe in a world where everyone has the right to understand and be understood. Widgit Symbols help with communication, education and understanding in schools, homes, healthcare and on the move.',
+          'Our partners range from national theatre groups and Premier League football clubs to families in the local community, and from SEN schools in Sweden to international schools in the UAE.'],
+        side: 'left', mediaLabel: 'Widgit Symbols in use', ctaLabel: 'Explore our products', ctaHref: 'products.html',
+      } },
+      { component: 'wf-cards', props: { heading: 'Find out more', cols: 2, items: [
+        { href: 'about-us.html', id: 'card-about-us', heading: 'About us', description: 'Our mission and values, the people behind the symbols, and what being a B Corp means to us.', imageLabel: 'Widgit office', linkText: 'Read about us' },
+        { href: 'news.html', id: 'card-about-news', heading: 'News', description: 'Company news, staff spotlights and stories from our community work.', imageLabel: 'News', linkText: 'See all news' },
+      ] } },
+      { component: 'wf-cards', props: { heading: 'Latest news', cols: 3, items: [
+        { href: 'news-staff-spotlight-sophie.html', category: 'Staff spotlight', heading: 'Staff spotlight: Sophie Clarke, Signage and Symbol Design Support', description: 'June 2026', imageLabel: 'Sophie Clarke', linkText: 'Read more' },
+        { href: 'news-bcorp.html', category: 'B Corp', heading: 'A balance of purpose and profit: Widgit\'s B Corp journey', description: 'October 2025', imageLabel: 'B Corp', linkText: 'Read more' },
+        { href: 'news-widgit-wilding.html', category: 'Widgit Wilding', heading: 'Widgit Wilding Part IV: Gardening at Painting\'s Plantation', description: 'June 2025', imageLabel: 'Team gardening', linkText: 'Read more' },
+      ] } },
+      trialPromo('cta-about-promo'),
+    ],
+  },
+
+  'about-us': {
+    hero: { component: 'wf-standard-hero', props: {
+      eyebrow: 'About Widgit', heading: 'About us',
+      body: 'We\'re a growing company of enthusiastic, dedicated people who share a passion for what we do, and how we do it.',
+      mediaLabel: 'The Widgit team at work', breadcrumb: bc({ label: 'About', href: 'about.html' }, { label: 'About us', href: 'about-us.html' }),
+    } },
+    blocks: [
+      { component: 'wf-text', props: { statement: true, heading: 'Our mission',
+        body: ['We believe in the power of symbols to support communication and understanding. Our software and symbols help practitioners support symbol users of all ages, so no-one feels left behind.'] } },
+      { component: 'wf-cards', props: { heading: 'Our values', cols: 3, items: [
+        { heading: 'Integrity', description: 'Treating everyone and everything we do in an honest and respectful manner.' },
+        { heading: 'Kindness', description: 'Acting in a positive, supportive and understanding way towards everyone we work with.' },
+        { heading: 'Quality', description: 'Taking pride in our work and constantly striving to improve and evolve.' },
+      ] } },
+      { component: 'wf-text-media', props: {
+        heading: 'Who we are',
+        body: ['From expert educators to some of the brightest nerds around, we\'re a kind bunch of people who want to do good in the world.',
+          'We work mostly hybrid, with flexible hours, from our office in Warwickshire. As a Living Wage employer, we pay our team based on the cost of living.'],
+        side: 'right', mediaLabel: 'Warwickshire office',
+      } },
+      { component: 'wf-cards', props: { heading: 'Our leadership team', cols: 4, items: [
+        { heading: 'Ben Stevenson', description: 'Chief Executive Officer', imageLabel: 'Photo' },
+        { heading: 'Clare Westwood', description: 'Chief Product Officer', imageLabel: 'Photo' },
+        { heading: 'Jonathan Sullivan', description: 'Chief Growth Officer', imageLabel: 'Photo' },
+        { heading: 'Paul Williams', description: 'Chief Finance Officer', imageLabel: 'Photo' },
+      ] } },
+      { component: 'wf-text-media', anchorId: 'b-corp', props: {
+        heading: 'Proud to be a B Corp',
+        body: ['B Corps meet high standards of social and environmental performance, accountability and transparency. Certification needs a score of 80; Widgit scores 117.8.',
+          'From monitoring our carbon footprint to giving back to the community, it\'s a promise to keep pushing for better for our team, our customers and the world around us.'],
+        side: 'left', mediaLabel: 'B Corp certification mark', ctaLabel: 'Read our B Corp story', ctaHref: 'news-bcorp.html',
+      } },
+      { component: 'wf-quote', props: { items: [
+        rq('The B Corp journey has helped us turn our values into actions. It\'s about being transparent, accountable, and constantly improving.', 'Kiran Heer', 'Office and Events Manager'),
+        rq('As an organisation built on integrity, kindness and quality, B Corp is a powerful extension of our shared goal to help make the world a better place, one small symbol at a time.', 'Louise Hopewell', 'Content Lead'),
+      ] } },
+      { component: 'wf-text', props: { heading: 'Giving back',
+        body: ['In 2024/25 we supported dozens of charities and community groups, including ACE Centre, BBC Children in Need, Birmingham Children\'s Hospital, Epilepsy Action and Macmillan Cancer Support.',
+          'Our Widgit Wilding volunteer days see the team planting trees and caring for school green spaces across Warwickshire.'] } },
+      { component: 'wf-text', props: { heading: 'Our history',
+        body: ['From our first ZX Spectrum games to Widgit Online, Widgit Symbols have supported communication for more than 40 years.'] } },
+      contactPromo('cta-about-us-promo', 'Want to work with us?', 'Whether you\'re a school, an organisation or a potential partner, we\'d love to hear from you.', contactLink('general')),
+    ],
+  },
+
+  news: {
+    hero: { component: 'wf-page-header', props: {
+      heading: 'News', subtitle: 'Company news, staff spotlights and stories from the Widgit community.',
+      breadcrumb: bc({ label: 'About', href: 'about.html' }, { label: 'News', href: 'news.html' }),
+    } },
+    blocks: [
+      { component: 'wf-cards', props: { cols: 4, filters: ['All', 'Staff spotlight', 'B Corp', 'Community', 'Widgit Wilding'], items: [
+        { href: 'news-staff-spotlight-sophie.html', id: 'card-news-sophie', category: 'Staff spotlight', heading: 'Staff spotlight: Sophie Clarke, Signage and Symbol Design Support', description: 'June 2026', imageLabel: 'Sophie Clarke', linkText: 'Read more' },
+        { href: 'news-bcorp.html', category: 'B Corp', heading: 'The B Corp effect: behind the scenes with Widgit and Be Inspired Films', description: 'March 2026', imageLabel: 'Filming', linkText: 'Read more' },
+        { href: 'news-staff-spotlight-sophie.html', category: 'Staff spotlight', heading: 'Staff spotlight: Lisa Pinkerton, Head of Education', description: 'November 2025', imageLabel: 'Lisa Pinkerton', linkText: 'Read more' },
+        { href: 'news-bcorp.html', category: 'B Corp', heading: 'A balance of purpose and profit: Widgit\'s B Corp journey', description: 'October 2025', imageLabel: 'B Corp', linkText: 'Read more' },
+        { href: 'news-widgit-wilding.html', category: 'Widgit Wilding', heading: 'Widgit Wilding Part IV: Gardening at Painting\'s Plantation, Campion School', description: 'June 2025', imageLabel: 'Team gardening', linkText: 'Read more' },
+        { href: 'news-staff-spotlight-sophie.html', category: 'Staff spotlight', heading: 'Staff spotlight: Dan Williams, Product Designer', description: 'May 2025', imageLabel: 'Dan Williams', linkText: 'Read more' },
+        { href: 'news-widgit-wilding.html', category: 'Widgit Wilding', heading: 'Widgit Wilding Part III: Tree planting in Chesterton', description: 'March 2025', imageLabel: 'Tree planting', linkText: 'Read more' },
+        { href: 'news-widgit-wilding.html', category: 'Community', heading: 'Widgit Staff Volunteer Day: Louise at Baby Basics', description: 'February 2025', imageLabel: 'Volunteer day', linkText: 'Read more' },
+      ] } },
+      trialPromo('cta-news-promo'),
+    ],
+  },
+
+  'news-bcorp': newsArticle('news-bcorp', 'B Corp', 'A balance of purpose and profit: Widgit\'s B Corp journey', 'October 2025',
+    'How Widgit found the right way to show it is a business that puts people first.',
+    [
+      { body: ['At Widgit, we\'ve always believed in purpose, driven by our values of quality, integrity and kindness. For years, though, we searched for the right way to show this to the business community and beyond.',
+        'We considered setting up a charitable arm, or becoming a not-for-profit or social enterprise. None felt right, because the good we do is woven into our products and services.'] },
+      { heading: 'The B Corp revelation', body: ['B Corp certification had been mentioned for years, but it always sounded like a goal for much larger organisations.',
+        'Conversations with the CEO of Cafe Direct, and later with Risk Evolves, showed us that much of what B Corp asks for, we were already doing. It wasn\'t about a radical shift, but about documenting our existing good practice.'] },
+      { heading: 'Our journey to certification', body: ['We worked through the assessment question by question, and brought in an HR professional and a writer to turn our "Widgity" way of working into formal policies.',
+        'Our first internal audit scored around 60, against the 80 points needed for certification. We now score 117.8.'] },
+      { heading: 'Advice for other businesses', body: ['The sooner, the better. Even if certification isn\'t your immediate goal, the B Corp assessment questions are an invaluable guide to areas you might not have considered.'] },
+    ], ['news-staff-spotlight-sophie', 'news-widgit-wilding']),
+
+  'news-staff-spotlight-sophie': newsArticle('news-staff-spotlight-sophie', 'Staff spotlight', 'Staff spotlight: Sophie Clarke, Signage and Symbol Design Support', 'June 2026',
+    'From work experience with the design team to becoming Widgit\'s first Signage and Symbol Design Support.',
+    [
+      { body: ['We sat down with Sophie Clarke to talk about her Widgit journey so far, her hopes for the future and, of course, her favourite Widgit Symbol.'] },
+      { heading: 'From work experience to a new role', body: ['After a GCSE in Graphic Design, Sophie approached Widgit about work experience. She worked with our Symbol and Information Designer, learning the rules every symbol must follow and redrawing symbols, including the horse.'] },
+      { heading: 'No day is the same', body: ['Sophie quotes for and designs Communication Boards and door signs, draws and checks new symbols before final approval, and has recently started writing the code behind Widgit Online templates.'] },
+      { heading: 'Her favourite Widgit Symbol', body: ['"Probably the axolotl (not yet in the set), simply because it was very fun to draw and they are such fun, unique little creatures."'] },
+    ], ['news-bcorp', 'news-widgit-wilding'],
+    rq('No matter what project I\'m working on, I always feel I have the support and help I need to do my job well.', 'Sophie Clarke', 'Signage and Symbol Design Support')),
+
+  'news-widgit-wilding': newsArticle('news-widgit-wilding', 'Widgit Wilding', 'Widgit Wilding Part IV: Gardening at Painting\'s Plantation, Campion School', 'June 2025',
+    'The Widgit team spent a day caring for a school\'s green space in Leamington Spa.',
+    [
+      { body: ['With summer on its way, the Widgit team set out for a day of fresh air and teamwork at Campion School in Leamington Spa, helping to care for the school\'s green space, Painting\'s Plantation.'] },
+      { heading: 'A living classroom', body: ['The tree-filled garden is named after Norman Painting OBE, a passionate advocate for the natural world and former Vice President of the Tree Council. It\'s a quiet retreat for students, and a living classroom.'] },
+      { heading: 'A day of pruning and mulching', body: ['We split into teams to prune overhanging branches, barrow mulch onto the beds and cut back a laurel hedge that had grown a little too confident over the years.',
+        'By lunchtime, the garden felt more open, vibrant and ready for both learning and wildlife.'] },
+    ], ['news-bcorp', 'news-staff-spotlight-sophie']),
+
   // ===================== EXTERNAL HAND-OFFS =====================
   'free-trial': handoffPage({ slug: 'free-trial', name: 'Start your free trial', destination: 'Widgit Online sign-up',
     body: 'Free trial sign-up happens inside Widgit Online, so this button hands you over to the Widgit Online sign-up flow.',
@@ -1276,6 +1422,31 @@ function resourcePage(slug: string, topic: string, title: string, meta: string, 
   }
 }
 
+function newsArticle(slug: string, category: string, title: string, date: string, standfirst: string,
+  sections: { heading?: string; body: string[] }[], related: string[], q?: { quote: string; attribution: string; role?: string }): Page {
+  const text = (sec: { heading?: string; body: string[] }): Block => ({ component: 'wf-text', props: { heading: sec.heading || '', body: sec.body, centered: true } })
+  const [first, ...rest] = sections
+  return {
+    hero: { component: 'wf-standard-hero', props: {
+      eyebrow: `${category} · ${date}`, heading: title, body: standfirst, mediaLabel: `${title} image`,
+      breadcrumb: bc({ label: 'About', href: 'about.html' }, { label: 'News', href: 'news.html' }, { label: title, href: `${slug}.html` }),
+    } },
+    blocks: [
+      text(first),
+      { component: 'wf-media', props: { type: 'image', label: 'Article image', caption: 'Caption to be supplied.', centered: true } },
+      ...rest.slice(0, 1).map(text),
+      ...(q ? [{ component: 'wf-quote', props: { items: [q] } } as Block] : []),
+      ...rest.slice(1).map(text),
+      { component: 'wf-share', props: { centered: true } },
+      { component: 'wf-cards', props: { heading: 'More news', cols: 3, items: [
+        ...related.map((r) => ({ href: `${r}.html`, category: NEWS_TITLES[r].category, heading: NEWS_TITLES[r].title, description: NEWS_TITLES[r].date, imageLabel: NEWS_TITLES[r].category, linkText: 'Read more' })),
+        { href: 'news.html', heading: 'All news', description: 'Company news, staff spotlights and community stories.', imageLabel: 'News', linkText: 'See all news' },
+      ] } },
+      trialPromo(`cta-${slug}-promo`),
+    ],
+  }
+}
+
 function eventPage(slug: string, eyebrow: string, title: string, summary: string, body: string[], when: string): Page {
   return {
     hero: { component: 'wf-standard-hero', props: {
@@ -1303,8 +1474,8 @@ function eventPage(slug: string, eyebrow: string, title: string, summary: string
 // Prototype navigator: core pages (grouped by template type), user flows, changelog.
 // ---------------------------------------------------------------------------
 
-export type CorePageType = 'Homepage' | 'Content' | 'Country landing' | 'Listing' | 'Article' | 'Detail' | 'Form' | 'Hand-off' | 'Utility'
-export const CORE_PAGE_TYPES: CorePageType[] = ['Homepage', 'Content', 'Country landing', 'Listing', 'Article', 'Detail', 'Form', 'Hand-off', 'Utility']
+export type CorePageType = 'Homepage' | 'Landing' | 'Content' | 'Country landing' | 'Listing' | 'Article' | 'Detail' | 'Form' | 'Hand-off' | 'Utility'
+export const CORE_PAGE_TYPES: CorePageType[] = ['Homepage', 'Landing', 'Content', 'Country landing', 'Listing', 'Article', 'Detail', 'Form', 'Hand-off', 'Utility']
 
 export interface CorePage { label: string; href: string; type: CorePageType; inferred?: boolean }
 
@@ -1335,6 +1506,10 @@ export const corePages: CorePage[] = [
   { label: 'Symbols in Action', href: 'symbols-in-action.html', type: 'Listing' },
   { label: 'Resources', href: 'resources.html', type: 'Listing' },
   { label: 'Events', href: 'events.html', type: 'Listing' },
+  { label: 'News', href: 'news.html', type: 'Listing' },
+  { label: 'About', href: 'about.html', type: 'Landing' },
+  { label: 'About us', href: 'about-us.html', type: 'Content' },
+  { label: 'News article', href: 'news-bcorp.html', type: 'Article', inferred: true },
   { label: 'Case study', href: 'case-study-trust.html', type: 'Article', inferred: true },
   { label: 'Resource page', href: 'resource-visual-timetable.html', type: 'Detail', inferred: true },
   { label: 'Event page', href: 'event-webinar.html', type: 'Detail', inferred: true },
@@ -1424,6 +1599,10 @@ export const flows: Flow[] = [
 export interface ChangelogEntry { date: string; type: 'Added' | 'Changed' | 'Removed' | 'Fixed'; text: string }
 
 export const changelog: ChangelogEntry[] = [
+  { date: '2026-11-12', type: 'Added', text: 'New About section in the main navigation, after Resources.' },
+  { date: '2026-11-12', type: 'Added', text: 'About landing page, About us page and News listing, with copy from widgit.com.' },
+  { date: '2026-11-12', type: 'Added', text: 'Three news articles, taken from the Widgit company blog.' },
+  { date: '2026-11-12', type: 'Fixed', text: 'Main navigation labels no longer wrap onto two lines on smaller laptop screens.' },
   { date: '2026-11-11', type: 'Changed', text: 'Filled in copy, prices and figures from the current widgit.com.' },
   { date: '2026-11-11', type: 'Changed', text: 'All six country pages now name the local partner and contact details.' },
   { date: '2026-11-11', type: 'Changed', text: 'Case studies now use real Widgit success stories.' },

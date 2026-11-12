@@ -51,6 +51,10 @@ Prices, figures, partner details, testimonials, success stories, training, licen
 | Resource page | Detail | resource-visual-timetable.html, resource-dentist-story.html, resource-phonics-mat.html |
 | Events | Listing | events.html |
 | Event page | Detail | event-webinar.html, event-exhibition.html |
+| About | Landing | about.html |
+| About us | Content | about-us.html |
+| News | Listing | news.html |
+| News article | Article | news-bcorp.html, news-staff-spotlight-sophie.html, news-widgit-wilding.html |
 | Contact us (routed) | Form | contact.html |
 | External hand-offs | Hand-off | free-trial.html, login.html, shop.html, shop-account.html, support-docs.html |
 | Search results | Utility | search.html |
@@ -94,6 +98,11 @@ Prices, figures, partner details, testimonials, success stories, training, licen
 - Only three success stories have detail pages. The other cards on Symbols in Action reuse them.
 - The live site lists 21 countries under International. The region switcher only covers six partner countries plus international schools.
 
+- The sitemap gives News the same filters as Resources (subscription tier, format, topic), which looks copied across. The prototype filters News by topic only: Staff spotlight, B Corp, Community and Widgit Wilding.
+- The live About section also has jobs, charities, history and customer stories pages. The prototype folds the key points into About us. Does Widgit want any of them as separate pages, especially jobs?
+- The leadership team names on About us come from the live Who we are page. Confirm they are current.
+- Only three news articles are built. The other News cards reuse them.
+
 ## Kit changes made in this build
 
 - Header: Shop and primary CTA now come from config (they were hardcoded from a previous project). Added a utility bar with region switcher, Contact, My Shop Account and Log in, a search link, and two-column panels for menus with more than five items.
@@ -104,6 +113,12 @@ Prices, figures, partner details, testimonials, success stories, training, licen
 - Vite builds every root HTML file automatically.
 
 ## Change log
+
+### 2026-11-12
+- Added: New About section in the main navigation, after Resources.
+- Added: About landing page, About us page and News listing, with copy from widgit.com.
+- Added: Three news articles, taken from the Widgit company blog.
+- Fixed: Main navigation labels no longer wrap onto two lines on smaller laptop screens.
 
 ### 2026-11-11
 - Changed: Filled in copy, prices and figures from the current widgit.com.
